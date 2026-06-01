@@ -26,6 +26,7 @@
 - Existing-project RLS migration: `supabase/harden-rls.sql`
 - 2026-05-25 live program update: today's workout was changed in Supabase to `Push/Pull + Tester Prep`; it copied the 2026-05-19 warm-up and lifting rows while preserving the already-created Week 2 tester cardio options.
 - 2026-05-26 live data update: HYROX Physical Fitness Test results were recorded for Chris Chaudoir and Lawrence Kam on 2026-03-23 and 2026-05-01. HYROX PFT was added as both a cardio benchmark and a coach-managed benchmark movement (`hyrox-pft`) so it appears in benchmark/history flows and leaderboard-capable benchmark lists.
+- 2026-06-01 live program update: the Week 3 tester prep workout was changed to `Push/Pull + Tester Prep`, assigned only to Lawrence Kam and Chris Chaudoir, and kept the existing Row 3 x 750m / Run 3 x 600m tester options. Added alternating strength rows: Incline DB Bench Press 5x10-12 tempo 30x1 using last week's weights, Pull-up 5x6-8 tempo 30x2 using the same setup as last week, Ring Push-up 4x10-12, and Neutral Grip Lat Pull 4x10-12.
 
 ## Roles and privacy
 
