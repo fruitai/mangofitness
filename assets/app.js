@@ -3269,32 +3269,45 @@ function renderExerciseHistoryPanel(exercise, athleteResults = [], selectedDate 
     <div class="exercise-history-panel hidden" data-exercise-history-panel="${escapeHtml(exercise.id)}">
       ${historyDays.length ? historyDays.map(([dateKey, rows]) => {
         const notes = [...new Set(rows.map((result) => result.notes).filter(Boolean))].join(" · ");
+        const editableRows = rows.filter((result) => result.exerciseId);
+        const dayKey = `${exercise.id}-${dateKey}`.replace(/[^a-zA-Z0-9_-]/g, "-");
         return `
           <section class="exercise-history-day">
             <div class="exercise-history-day-head">
-              <strong>${escapeHtml(displayDate(dateKey))}</strong>
-              <span class="muted">${rows.length} set${rows.length === 1 ? "" : "s"}</span>
+              <div>
+                <strong>${escapeHtml(displayDate(dateKey))}</strong>
+                <span class="muted">${rows.length} set${rows.length === 1 ? "" : "s"}</span>
+              </div>
+              ${editableRows.length ? `<button type="button" class="exercise-history-edit-button" data-history-day-edit="${escapeHtml(dayKey)}">Edit</button>` : ""}
             </div>
             <div class="exercise-history-sets">
               ${rows.map((result, index) => {
                 const setLabel = result.setNumber || index + 1;
                 const weight = result.weight !== "" && result.weight != null ? `${result.weight} lb` : "—";
                 const reps = result.reps ? `${result.reps} reps` : "— reps";
-                const canEdit = Boolean(result.exerciseId);
                 return `
                   <div class="exercise-history-set" data-history-result-id="${escapeHtml(result.id)}">
                     <span>Set ${escapeHtml(setLabel)}</span>
                     <strong>${escapeHtml(reps)} x ${escapeHtml(weight)}${result.isPr ? ` <span class="pr-badge">PR</span>` : ""}</strong>
-                    ${canEdit ? `<button type="button" class="exercise-history-edit-button" data-history-edit="${escapeHtml(result.id)}">Edit</button>` : ""}
-                    ${canEdit ? `<div class="exercise-history-editor hidden" data-history-editor="${escapeHtml(result.id)}">
-                      <label><span>Reps</span><input type="text" inputmode="numeric" data-history-reps value="${escapeHtml(result.reps || "")}" placeholder="reps" /></label>
-                      <label><span>Weight</span><input type="text" inputmode="decimal" data-history-weight value="${result.weight !== "" && result.weight != null ? escapeHtml(result.weight) : ""}" placeholder="lb" /></label>
-                      <button type="button" class="primary" data-history-save="${escapeHtml(result.id)}">Save</button>
-                    </div>` : ""}
                   </div>
                 `;
               }).join("")}
             </div>
+            ${editableRows.length ? `
+              <div class="exercise-history-editor hidden" data-history-day-editor="${escapeHtml(dayKey)}">
+                ${editableRows.map((result, index) => {
+                  const setLabel = result.setNumber || index + 1;
+                  return `
+                    <div class="exercise-history-edit-row" data-history-edit-result="${escapeHtml(result.id)}">
+                      <strong>Set ${escapeHtml(setLabel)}</strong>
+                      <label><span>Reps</span><input type="text" inputmode="numeric" data-history-reps value="${escapeHtml(result.reps || "")}" placeholder="reps" /></label>
+                      <label><span>Weight</span><input type="text" inputmode="decimal" data-history-weight value="${result.weight !== "" && result.weight != null ? escapeHtml(result.weight) : ""}" placeholder="lb" /></label>
+                    </div>
+                  `;
+                }).join("")}
+                <button type="button" class="primary" data-history-day-save="${escapeHtml(dayKey)}">Save all</button>
+              </div>
+            ` : ""}
             ${notes ? `<p class="muted exercise-history-notes">${escapeHtml(notes)}</p>` : ""}
           </section>
         `;
@@ -3696,9 +3709,9 @@ function initAthleteApp() {
         });
       });
 
-      view.querySelectorAll("[data-history-edit]").forEach((button) => {
+      view.querySelectorAll("[data-history-day-edit]").forEach((button) => {
         button.addEventListener("click", () => {
-          const editor = view.querySelector(`[data-history-editor="${CSS.escape(button.dataset.historyEdit || "")}"]`);
+          const editor = view.querySelector(`[data-history-day-editor="${CSS.escape(button.dataset.historyDayEdit || "")}"]`);
           if (!editor) return;
           const willShow = editor.classList.contains("hidden");
           editor.classList.toggle("hidden", !willShow);
@@ -3706,27 +3719,31 @@ function initAthleteApp() {
         });
       });
 
-      view.querySelectorAll("[data-history-save]").forEach((button) => {
+      view.querySelectorAll("[data-history-day-save]").forEach((button) => {
         button.addEventListener("click", async () => {
-          const resultId = button.dataset.historySave || "";
-          const result = athleteResults.find((item) => item.id === resultId);
-          const editor = view.querySelector(`[data-history-editor="${CSS.escape(resultId)}"]`);
-          if (!result || !editor) return;
+          const dayKey = button.dataset.historyDaySave || "";
+          const editor = view.querySelector(`[data-history-day-editor="${CSS.escape(dayKey)}"]`);
+          if (!editor) return;
           button.disabled = true;
           button.textContent = "Saving...";
           try {
-            await MangoFitnessStore.saveResult({
-              ...result,
-              id: result.id,
-              athleteId: selectedAthleteId,
-              reps: editor.querySelector("[data-history-reps]")?.value || "",
-              weight: numericWeight(editor.querySelector("[data-history-weight]")?.value),
-              notes: result.notes || ""
-            });
+            for (const row of editor.querySelectorAll("[data-history-edit-result]")) {
+              const resultId = row.dataset.historyEditResult || "";
+              const result = athleteResults.find((item) => item.id === resultId);
+              if (!result) continue;
+              await MangoFitnessStore.saveResult({
+                ...result,
+                id: result.id,
+                athleteId: selectedAthleteId,
+                reps: row.querySelector("[data-history-reps]")?.value || "",
+                weight: numericWeight(row.querySelector("[data-history-weight]")?.value),
+                notes: result.notes || ""
+              });
+            }
             await renderAthlete();
           } catch (error) {
             button.disabled = false;
-            button.textContent = "Save";
+            button.textContent = "Save all";
             view.insertAdjacentHTML("afterbegin", `<p class="error-text">${escapeHtml(friendlyError(error))}</p>`);
           }
         });

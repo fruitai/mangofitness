@@ -2573,6 +2573,10 @@ body.is-moving-coach-program {
   gap: 10px;
   justify-content: space-between;
 }
+.exercise-history-day-head > div {
+  display: grid;
+  gap: 2px;
+}
 .exercise-history-sets {
   display: grid;
   gap: 6px;
@@ -2583,7 +2587,7 @@ body.is-moving-coach-program {
   border-radius: 12px;
   display: grid;
   gap: 8px;
-  grid-template-columns: 70px minmax(0, 1fr) auto;
+  grid-template-columns: 70px minmax(0, 1fr);
   padding: 8px 10px;
 }
 .exercise-history-sets span {
@@ -2604,15 +2608,19 @@ body.is-moving-coach-program {
   border-top: 1px solid rgba(15, 122, 59, .12);
   display: grid;
   gap: 8px;
-  grid-column: 1 / -1;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
   padding-top: 8px;
 }
-.exercise-history-editor label {
+.exercise-history-edit-row {
+  align-items: end;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1fr);
+}
+.exercise-history-edit-row label {
   display: grid;
   gap: 4px;
 }
-.exercise-history-editor label span {
+.exercise-history-edit-row label span {
   font-size: 11px;
 }
 .exercise-history-editor input {
@@ -2630,10 +2638,10 @@ body.is-moving-coach-program {
 }
 @media (max-width: 520px) {
   .exercise-history-set {
-    grid-template-columns: 62px minmax(0, 1fr) auto;
+    grid-template-columns: 62px minmax(0, 1fr);
   }
-  .exercise-history-editor {
-    grid-template-columns: 1fr;
+  .exercise-history-edit-row {
+    grid-template-columns: 54px minmax(0, 1fr) minmax(0, 1fr);
   }
 }
 .cardio-option-card.is-collapsed .cardio-option-log-fields {
