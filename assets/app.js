@@ -3279,8 +3279,8 @@ function renderExerciseHistoryPanel(exercise, athleteResults = [], selectedDate 
               ${rows.map((result, index) => {
                 const setLabel = result.setNumber || index + 1;
                 const weight = result.weight !== "" && result.weight != null ? `${result.weight} lb` : "—";
-                const reps = result.reps ? ` × ${result.reps}` : "";
-                return `<div><span>Set ${escapeHtml(setLabel)}</span><strong>${escapeHtml(weight)}${escapeHtml(reps)}${result.isPr ? ` <span class="pr-badge">PR</span>` : ""}</strong></div>`;
+                const reps = result.reps ? `${result.reps} reps` : "— reps";
+                return `<div><span>Set ${escapeHtml(setLabel)}</span><strong>${escapeHtml(reps)} x ${escapeHtml(weight)}${result.isPr ? ` <span class="pr-badge">PR</span>` : ""}</strong></div>`;
               }).join("")}
             </div>
             ${notes ? `<p class="muted exercise-history-notes">${escapeHtml(notes)}</p>` : ""}
