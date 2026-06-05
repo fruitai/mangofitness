@@ -2518,6 +2518,88 @@ body.is-moving-coach-program {
   padding: 8px 12px;
   white-space: nowrap;
 }
+.exercise-history-toggle {
+  align-items: flex-start;
+  background: transparent;
+  border: 0;
+  color: var(--text);
+  display: inline-grid;
+  gap: 2px;
+  justify-items: start;
+  min-height: 0;
+  padding: 0;
+  text-align: left;
+  white-space: normal;
+}
+.exercise-history-toggle span {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-decoration: underline;
+  text-decoration-color: rgba(15, 122, 59, .35);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.exercise-history-toggle small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+.exercise-history-toggle.is-open span {
+  color: var(--accent-dark);
+}
+.exercise-history-panel {
+  border: 1px solid rgba(15, 122, 59, .16);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .78);
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+}
+.exercise-history-day {
+  border-bottom: 1px solid rgba(15, 122, 59, .1);
+  display: grid;
+  gap: 8px;
+  padding-bottom: 10px;
+}
+.exercise-history-day:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.exercise-history-day-head {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+.exercise-history-sets {
+  display: grid;
+  gap: 6px;
+}
+.exercise-history-sets div {
+  align-items: center;
+  background: rgba(240, 253, 244, .72);
+  border-radius: 12px;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 70px minmax(0, 1fr);
+  padding: 8px 10px;
+}
+.exercise-history-sets span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.exercise-history-sets strong {
+  color: var(--accent-dark);
+  font-size: 14px;
+}
+.exercise-history-notes,
+.exercise-history-empty {
+  margin: 0;
+}
 .cardio-option-card.is-collapsed .cardio-option-log-fields {
   display: none;
 }

@@ -3239,6 +3239,58 @@ function exerciseLoggedResults(exercise, athleteResults = [], selectedDate = "")
     .sort((a, b) => (Number(a.setNumber || 0) - Number(b.setNumber || 0)) || String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
 }
 
+function previousExerciseHistoryDays(exercise, athleteResults = [], selectedDate = "") {
+  const rows = matchingStrengthResults(athleteResults, exercise)
+    .filter((result) => result.completedOn && (!selectedDate || result.completedOn < selectedDate))
+    .sort((a, b) => String(b.completedOn || "").localeCompare(String(a.completedOn || ""))
+      || (Number(a.setNumber || 0) - Number(b.setNumber || 0))
+      || String(a.createdAt || "").localeCompare(String(b.createdAt || "")));
+  return rows.reduce((days, result) => {
+    const dateKey = result.completedOn || "unknown";
+    if (!days.has(dateKey)) days.set(dateKey, []);
+    days.get(dateKey).push(result);
+    return days;
+  }, new Map());
+}
+
+function renderExerciseHistoryButton(exercise, athleteResults = [], selectedDate = "") {
+  const historyDays = previousExerciseHistoryDays(exercise, athleteResults, selectedDate);
+  return `
+    <button type="button" class="exercise-history-toggle" data-exercise-history="${escapeHtml(exercise.id)}" aria-expanded="false">
+      <span>${escapeHtml(exercise.name)}</span>
+      <small>${historyDays.size ? `${historyDays.size} previous day${historyDays.size === 1 ? "" : "s"}` : "History"}</small>
+    </button>
+  `;
+}
+
+function renderExerciseHistoryPanel(exercise, athleteResults = [], selectedDate = "") {
+  const historyDays = [...previousExerciseHistoryDays(exercise, athleteResults, selectedDate).entries()];
+  return `
+    <div class="exercise-history-panel hidden" data-exercise-history-panel="${escapeHtml(exercise.id)}">
+      ${historyDays.length ? historyDays.map(([dateKey, rows]) => {
+        const notes = [...new Set(rows.map((result) => result.notes).filter(Boolean))].join(" · ");
+        return `
+          <section class="exercise-history-day">
+            <div class="exercise-history-day-head">
+              <strong>${escapeHtml(displayDate(dateKey))}</strong>
+              <span class="muted">${rows.length} set${rows.length === 1 ? "" : "s"}</span>
+            </div>
+            <div class="exercise-history-sets">
+              ${rows.map((result, index) => {
+                const setLabel = result.setNumber || index + 1;
+                const weight = result.weight !== "" && result.weight != null ? `${result.weight} lb` : "—";
+                const reps = result.reps ? ` × ${result.reps}` : "";
+                return `<div><span>Set ${escapeHtml(setLabel)}</span><strong>${escapeHtml(weight)}${escapeHtml(reps)}${result.isPr ? ` <span class="pr-badge">PR</span>` : ""}</strong></div>`;
+              }).join("")}
+            </div>
+            ${notes ? `<p class="muted exercise-history-notes">${escapeHtml(notes)}</p>` : ""}
+          </section>
+        `;
+      }).join("") : `<p class="muted exercise-history-empty">No previous ${escapeHtml(exercise.name)} logs yet.</p>`}
+    </div>
+  `;
+}
+
 function renderSetLogRow(setNumber, exercise, suggestion = null, logged = null) {
   return `
     <div class="set-log-row" data-set-number="${escapeHtml(setNumber)}" data-existing-result-id="${escapeHtml(logged?.id || "")}" data-swipe-delete-row>
@@ -3570,13 +3622,14 @@ function initAthleteApp() {
                       <form class="result-form${isCardioChoice ? " cardio-option-card" : ""}${isCardioChoice && isSelectedCardio ? " is-selected" : ""}${isCardioChoice && !isSelectedCardio ? " is-collapsed" : ""}" data-workout-id="${workout.id}" data-exercise-id="${exercise.id}" data-exercise-name="${escapeHtml(exercise.name)}" data-existing-result-id="${escapeHtml(exerciseLoggedResults(exercise, athleteResults, date.value)[0]?.id || "")}"${isSplitCardioExercise(exercise) ? " data-split-log-form=\"true\"" : ""}>
                         <div class="cardio-option-head">
                           <div>
-                            <strong>${escapeHtml(exercise.name)}</strong>
+                            ${renderExerciseHistoryButton(exercise, athleteResults, date.value)}
                             ${exerciseSummary(exercise) ? `<p class="muted">${exerciseSummary(exercise)}</p>` : ""}
                             ${exercise.notes ? `<p>${escapeHtml(exercise.notes)}</p>` : ""}
                           </div>
                           ${isCardioChoice ? `<button type="button" class="${isSelectedCardio ? "primary" : ""}" data-choose-cardio-option="${escapeHtml(exercise.id)}" data-workout-id="${escapeHtml(workout.id)}">${isSelectedCardio ? "Selected" : "Choose"}</button>` : ""}
                         </div>
                         <div class="cardio-option-log-fields">
+                          ${renderExerciseHistoryPanel(exercise, athleteResults, date.value)}
                           ${renderSetLogFields(exercise, athleteResults, date.value)}
                           ${renderResultNotesField(exerciseLoggedResults(exercise, athleteResults, date.value)[0]?.notes || "")}
                           <button type="submit" class="primary">Log result</button>
@@ -3617,6 +3670,17 @@ function initAthleteApp() {
         button.addEventListener("click", () => {
           selectedCardioOptions.set(button.dataset.workoutId || selectedWorkoutId, button.dataset.chooseCardioOption || "");
           renderAthlete();
+        });
+      });
+
+      view.querySelectorAll("[data-exercise-history]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const panel = view.querySelector(`[data-exercise-history-panel="${CSS.escape(button.dataset.exerciseHistory || "")}"]`);
+          if (!panel) return;
+          const willShow = panel.classList.contains("hidden");
+          panel.classList.toggle("hidden", !willShow);
+          button.setAttribute("aria-expanded", willShow ? "true" : "false");
+          button.classList.toggle("is-open", willShow);
         });
       });
 
