@@ -3280,7 +3280,19 @@ function renderExerciseHistoryPanel(exercise, athleteResults = [], selectedDate 
                 const setLabel = result.setNumber || index + 1;
                 const weight = result.weight !== "" && result.weight != null ? `${result.weight} lb` : "—";
                 const reps = result.reps ? `${result.reps} reps` : "— reps";
-                return `<div><span>Set ${escapeHtml(setLabel)}</span><strong>${escapeHtml(reps)} x ${escapeHtml(weight)}${result.isPr ? ` <span class="pr-badge">PR</span>` : ""}</strong></div>`;
+                const canEdit = Boolean(result.exerciseId);
+                return `
+                  <div class="exercise-history-set" data-history-result-id="${escapeHtml(result.id)}">
+                    <span>Set ${escapeHtml(setLabel)}</span>
+                    <strong>${escapeHtml(reps)} x ${escapeHtml(weight)}${result.isPr ? ` <span class="pr-badge">PR</span>` : ""}</strong>
+                    ${canEdit ? `<button type="button" class="exercise-history-edit-button" data-history-edit="${escapeHtml(result.id)}">Edit</button>` : ""}
+                    ${canEdit ? `<div class="exercise-history-editor hidden" data-history-editor="${escapeHtml(result.id)}">
+                      <label><span>Reps</span><input type="text" inputmode="numeric" data-history-reps value="${escapeHtml(result.reps || "")}" placeholder="reps" /></label>
+                      <label><span>Weight</span><input type="text" inputmode="decimal" data-history-weight value="${result.weight !== "" && result.weight != null ? escapeHtml(result.weight) : ""}" placeholder="lb" /></label>
+                      <button type="button" class="primary" data-history-save="${escapeHtml(result.id)}">Save</button>
+                    </div>` : ""}
+                  </div>
+                `;
               }).join("")}
             </div>
             ${notes ? `<p class="muted exercise-history-notes">${escapeHtml(notes)}</p>` : ""}
@@ -3681,6 +3693,42 @@ function initAthleteApp() {
           panel.classList.toggle("hidden", !willShow);
           button.setAttribute("aria-expanded", willShow ? "true" : "false");
           button.classList.toggle("is-open", willShow);
+        });
+      });
+
+      view.querySelectorAll("[data-history-edit]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const editor = view.querySelector(`[data-history-editor="${CSS.escape(button.dataset.historyEdit || "")}"]`);
+          if (!editor) return;
+          const willShow = editor.classList.contains("hidden");
+          editor.classList.toggle("hidden", !willShow);
+          button.textContent = willShow ? "Cancel" : "Edit";
+        });
+      });
+
+      view.querySelectorAll("[data-history-save]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const resultId = button.dataset.historySave || "";
+          const result = athleteResults.find((item) => item.id === resultId);
+          const editor = view.querySelector(`[data-history-editor="${CSS.escape(resultId)}"]`);
+          if (!result || !editor) return;
+          button.disabled = true;
+          button.textContent = "Saving...";
+          try {
+            await MangoFitnessStore.saveResult({
+              ...result,
+              id: result.id,
+              athleteId: selectedAthleteId,
+              reps: editor.querySelector("[data-history-reps]")?.value || "",
+              weight: numericWeight(editor.querySelector("[data-history-weight]")?.value),
+              notes: result.notes || ""
+            });
+            await renderAthlete();
+          } catch (error) {
+            button.disabled = false;
+            button.textContent = "Save";
+            view.insertAdjacentHTML("afterbegin", `<p class="error-text">${escapeHtml(friendlyError(error))}</p>`);
+          }
         });
       });
 
