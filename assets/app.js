@@ -3173,6 +3173,14 @@ function matchingStrengthResults(results, exercise) {
   });
 }
 
+function matchingExerciseHistoryResults(results, exercise) {
+  const token = exerciseMovementToken(exercise);
+  return (results || []).filter((result) => {
+    if (!token || resultMovementToken(result) !== token) return false;
+    return numericWeight(result.weight) != null || numericReps(result.reps) != null || String(result.score || "").trim();
+  });
+}
+
 function latestStrengthResult(results, exercise) {
   return matchingStrengthResults(results, exercise)[0] || null;
 }
@@ -3240,7 +3248,7 @@ function exerciseLoggedResults(exercise, athleteResults = [], selectedDate = "")
 }
 
 function previousExerciseHistoryDays(exercise, athleteResults = [], selectedDate = "") {
-  const rows = matchingStrengthResults(athleteResults, exercise)
+  const rows = matchingExerciseHistoryResults(athleteResults, exercise)
     .filter((result) => result.completedOn && (!selectedDate || result.completedOn < selectedDate))
     .sort((a, b) => String(b.completedOn || "").localeCompare(String(a.completedOn || ""))
       || (Number(a.setNumber || 0) - Number(b.setNumber || 0))
