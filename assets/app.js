@@ -3412,15 +3412,18 @@ function renderAddedSetRow(setNumber, repsPlaceholder = "reps", weightPlaceholde
   `;
 }
 
-function workoutLogCount(statuses = [], results = []) {
-  const workoutIds = new Set();
+function workoutLogDayCount(statuses = [], results = [], workouts = []) {
+  const workoutDates = new Set();
+  const dateByWorkoutId = new Map((workouts || []).map((workout) => [workout.id, workout.date]).filter(([, date]) => date));
   (statuses || []).forEach((status) => {
-    if (status.status === "done" && status.workout_id) workoutIds.add(status.workout_id);
+    if (status.status !== "done") return;
+    const workoutDate = dateByWorkoutId.get(status.workout_id) || status.marked_on || "";
+    if (workoutDate) workoutDates.add(workoutDate);
   });
   (results || []).forEach((result) => {
-    if (result.workoutId) workoutIds.add(result.workoutId);
+    if (result.completedOn) workoutDates.add(result.completedOn);
   });
-  return workoutIds.size;
+  return workoutDates.size;
 }
 
 function autoExpandNoteField(field) {
@@ -3601,9 +3604,9 @@ function initAthleteApp() {
       selectedWorkoutId = workout?.id || "";
 
       if (logCounter) {
-        const count = workoutLogCount(athleteStatuses, athleteResults);
+        const count = workoutLogDayCount(athleteStatuses, athleteResults, visibleWorkouts);
         logCounter.classList.toggle("hidden", !selectedAthleteId);
-        logCounter.innerHTML = `<strong>${escapeHtml(count)}</strong><span>${count === 1 ? "workout logged" : "workouts logged"}</span>`;
+        logCounter.innerHTML = `<strong>${escapeHtml(count)}</strong><span>${count === 1 ? "workout day logged" : "workout days logged"}</span>`;
       }
       if (weekLabel) weekLabel.innerHTML = renderWeekPickerButtonLabel(`Week of ${shortDate(weekStart)} – ${shortDate(weekEnd)}`);
       weekPickerWorkouts = visibleWorkouts;
