@@ -3250,7 +3250,7 @@ function exerciseLoggedResults(exercise, athleteResults = [], selectedDate = "")
 function previousExerciseHistoryDays(exercise, athleteResults = [], selectedDate = "") {
   const rows = matchingExerciseHistoryResults(athleteResults, exercise)
     .filter((result) => result.completedOn && (!selectedDate || result.completedOn < selectedDate))
-    .sort((a, b) => String(b.completedOn || "").localeCompare(String(a.completedOn || ""))
+    .sort((a, b) => String(a.completedOn || "").localeCompare(String(b.completedOn || ""))
       || (Number(a.setNumber || 0) - Number(b.setNumber || 0))
       || String(a.createdAt || "").localeCompare(String(b.createdAt || "")));
   return rows.reduce((days, result) => {
