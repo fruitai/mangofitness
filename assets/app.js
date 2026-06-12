@@ -3412,6 +3412,17 @@ function renderAddedSetRow(setNumber, repsPlaceholder = "reps", weightPlaceholde
   `;
 }
 
+function workoutLogCount(statuses = [], results = []) {
+  const workoutIds = new Set();
+  (statuses || []).forEach((status) => {
+    if (status.status === "done" && status.workout_id) workoutIds.add(status.workout_id);
+  });
+  (results || []).forEach((result) => {
+    if (result.workoutId) workoutIds.add(result.workoutId);
+  });
+  return workoutIds.size;
+}
+
 function autoExpandNoteField(field) {
   if (!field) return;
   field.style.height = "auto";
@@ -3436,6 +3447,7 @@ function initAthleteApp() {
   const view = document.getElementById("athleteWorkoutView");
   const scheduleView = document.getElementById("athleteScheduleView");
   const profileSelect = document.getElementById("athleteProfileSelect");
+  const logCounter = document.getElementById("athleteLogCounter");
   const weekLabel = document.getElementById("athleteWeekLabel");
   const workoutCount = document.getElementById("athleteWorkoutCount");
   const weekPicker = document.getElementById("athleteWeekPicker");
@@ -3570,20 +3582,29 @@ function initAthleteApp() {
       const workouts = await MangoFitnessStore.workouts();
       const selectedAthleteId = signedInAthleteId;
       const statuses = selectedAthleteId ? await MangoFitnessStore.workoutStatuses() : [];
+      const athleteStatuses = selectedAthleteId ? statuses.filter((item) => item.athlete_id === selectedAthleteId) : [];
       const weekStart = selectedWeekStart;
       const weekEnd = addDays(weekStart, 6);
       const visibleWorkouts = selectedAthleteId
         ? workouts.filter((item) => isWorkoutVisibleToAthlete(item, selectedAthleteId))
         : workouts.filter((item) => (item.assignmentType || "everyone") === "everyone");
+      const athleteResults = selectedAthleteId
+        ? (await MangoFitnessStore.results()).filter((result) => result.athleteId === selectedAthleteId)
+        : [];
       const weekWorkouts = visibleWorkouts.filter((item) => {
         const workoutDate = parseLocalDate(item.date);
         return workoutDate >= weekStart && workoutDate <= weekEnd;
       });
       const selectedDateWorkouts = visibleWorkouts.filter((item) => item.date === date.value);
       const workout = selectedDateWorkouts.find((item) => item.id === selectedWorkoutId) || selectedDateWorkouts[0];
-      const workoutStatus = statuses.find((item) => item.workout_id === workout?.id && item.athlete_id === selectedAthleteId);
+      const workoutStatus = athleteStatuses.find((item) => item.workout_id === workout?.id);
       selectedWorkoutId = workout?.id || "";
 
+      if (logCounter) {
+        const count = workoutLogCount(athleteStatuses, athleteResults);
+        logCounter.classList.toggle("hidden", !selectedAthleteId);
+        logCounter.innerHTML = `<strong>${escapeHtml(count)}</strong><span>${count === 1 ? "workout logged" : "workouts logged"}</span>`;
+      }
       if (weekLabel) weekLabel.innerHTML = renderWeekPickerButtonLabel(`Week of ${shortDate(weekStart)} – ${shortDate(weekEnd)}`);
       weekPickerWorkouts = visibleWorkouts;
       renderWeekPicker(weekPickerWorkouts);
@@ -3611,7 +3632,7 @@ function initAthleteApp() {
                 ${dayWorkouts.length ? dayWorkouts.map((item) => `
                   <button type="button" class="calendar-workout-card athlete-schedule-card${item.isAthleteCreated ? " self-workout-card" : ""}" data-athlete-date="${escapeHtml(item.date)}" data-athlete-workout-id="${escapeHtml(item.id)}">
                     <strong>${escapeHtml(item.title)}</strong>
-                    <p class="muted">${item.exercises.length} items · ${workoutAssignmentLabel(item)}${(() => { const status = statuses.find((entry) => entry.workout_id === item.id && entry.athlete_id === selectedAthleteId); return status?.status === "done" ? " · Done" : ""; })()}</p>
+                    <p class="muted">${item.exercises.length} items · ${workoutAssignmentLabel(item)}${(() => { const status = athleteStatuses.find((entry) => entry.workout_id === item.id); return status?.status === "done" ? " · Done" : ""; })()}</p>
                   </button>
                 `).join("") : `<p class="muted calendar-empty">No workout</p>`}
               </div>
@@ -3627,10 +3648,6 @@ function initAthleteApp() {
         });
       }
 
-      let athleteResults = [];
-      if (workout && selectedAthleteId) {
-        athleteResults = (await MangoFitnessStore.results()).filter((result) => result.athleteId === selectedAthleteId);
-      }
       const loggedExerciseIds = new Set(athleteResults.filter((result) => result.completedOn === date.value).map((result) => result.exerciseId));
 
       if (!workout) {

@@ -64,6 +64,27 @@ body {
 }
 .hero-description { width: 100%; margin: 2px 0 0; max-width: 720px; }
 .hero .muted { color: rgba(255,255,255,.82); }
+.athlete-log-counter {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  width: max-content;
+  max-width: 100%;
+  margin-top: 10px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+  color: white;
+  font-size: 13px;
+  line-height: 1;
+}
+.athlete-log-counter strong {
+  font-size: 16px;
+}
+.athlete-log-counter span {
+  white-space: nowrap;
+}
 
 .brand-heading { display:flex; align-items:center; gap:12px; }
 .brand-mark {
