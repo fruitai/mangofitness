@@ -85,6 +85,16 @@ body {
 .athlete-log-counter span {
   white-space: nowrap;
 }
+.athlete-log-flame {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  fill: #ffb703;
+}
+.athlete-log-flame path + path {
+  fill: #fff3c4;
+  opacity: .9;
+}
 
 .brand-heading { display:flex; align-items:center; gap:12px; }
 .brand-mark {

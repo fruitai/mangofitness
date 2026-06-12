@@ -3426,6 +3426,17 @@ function workoutLogDayCount(statuses = [], results = [], workouts = []) {
   return workoutDates.size;
 }
 
+function renderAthleteLogCounter(count) {
+  return `
+    <svg class="athlete-log-flame" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 22c3.4 0 6-2.5 6-5.9 0-2.5-1.5-4.4-3.1-6.1-.5 1.8-1.7 3.1-3.3 3.8.7-3.1.1-6.2-1.8-8.9C7.6 7.2 6 10.4 6 13.8 6 18.7 8.6 22 12 22Z"></path>
+      <path d="M12 20c1.6 0 2.9-1.2 2.9-2.9 0-1.2-.7-2.2-1.5-3.1-.4 1.1-1.1 1.8-2.1 2.3.2-1.5-.1-2.8-.9-4.1-1.2 1.4-2.1 3-2.1 4.8 0 1.8 1.4 3 3.7 3Z"></path>
+    </svg>
+    <strong>${escapeHtml(count)}</strong>
+    <span>${count === 1 ? "workout day logged" : "workout days logged"}</span>
+  `;
+}
+
 function autoExpandNoteField(field) {
   if (!field) return;
   field.style.height = "auto";
@@ -3606,7 +3617,7 @@ function initAthleteApp() {
       if (logCounter) {
         const count = workoutLogDayCount(athleteStatuses, athleteResults, visibleWorkouts);
         logCounter.classList.toggle("hidden", !selectedAthleteId);
-        logCounter.innerHTML = `<strong>${escapeHtml(count)}</strong><span>${count === 1 ? "workout day logged" : "workout days logged"}</span>`;
+        logCounter.innerHTML = renderAthleteLogCounter(count);
       }
       if (weekLabel) weekLabel.innerHTML = renderWeekPickerButtonLabel(`Week of ${shortDate(weekStart)} – ${shortDate(weekEnd)}`);
       weekPickerWorkouts = visibleWorkouts;
