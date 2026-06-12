@@ -866,7 +866,7 @@ function strengthMovementByName(name) {
 const defaultCardioBenchmarks = [
   { key: "", name: "Select benchmark" },
   { key: "4k-row", name: "4K Row", scoreType: "Time", description: "For time: row 4,000 meters. Record finish time." },
-  { key: "2k-row", name: "2K Row", scoreType: "Time", description: "For time: row 2,000 meters. Record finish time." },
+  { key: "2k-row", name: "Row 2K", scoreType: "Time", description: "For time: row 2,000 meters. Record finish time." },
   { key: "1-mile-run", name: "1 Mile Run", scoreType: "Time" },
   { key: "5k-run", name: "5K Run", scoreType: "Time" },
   { key: "assault-bike-calories", name: "Assault Bike Calories", scoreType: "Calories" },
@@ -5395,7 +5395,7 @@ function initAthleteLeaderboardApp() {
 
   function eventKey(result) {
     const name = String(result.exerciseName || result.event_name || "").toLowerCase();
-    if (/\b(row 2k|2k row|2000m row|row 2000m)\b/.test(name)) return { type: "row", name: "2K Row", mode: "lower" };
+    if (/\b(row 2k|2k row|2000m row|row 2000m)\b/.test(name)) return { type: "row", name: "Row 2K", mode: "lower" };
     if (/\b(row 3k|3k row|3000m row|row 3000m)\b/.test(name)) return { type: "row", name: "3K Row", mode: "lower" };
     if (/\b(row 4k|4k row|4000m row|row 4000m)\b/.test(name)) return { type: "row", name: "4K Row", mode: "lower" };
     if (/\b(angie|cindy|murph|fran|helen|grace|annie|death by|koko|wall ball|burpee|air ?squat)\b/.test(name)) {
@@ -5516,7 +5516,7 @@ function initAthleteLeaderboardApp() {
         map.get(item.event.name).results.push(item.result);
         return map;
       }, new Map());
-      const eventOrder = ["Angie", "Cindy", "Murph", "Fran", "Helen", "Grace", "Annie", "2K Row", "3K Row", "4K Row"];
+      const eventOrder = ["Angie", "Cindy", "Murph", "Fran", "Helen", "Grace", "Annie", "Row 2K", "3K Row", "4K Row"];
       const groups = [...eventGroups.values()].sort((a, b) => {
         const ai = eventOrder.indexOf(a.event.name);
         const bi = eventOrder.indexOf(b.event.name);
