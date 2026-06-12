@@ -86,14 +86,18 @@ body {
   white-space: nowrap;
 }
 .athlete-log-flame {
-  width: 17px;
-  height: 17px;
+  width: 23px;
+  height: 23px;
+  padding: 3px;
   flex: 0 0 auto;
-  fill: #ffb703;
+  border-radius: 999px;
+  background: rgba(255,255,255,.92);
+  fill: #f97316;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, .10);
 }
 .athlete-log-flame path + path {
-  fill: #fff3c4;
-  opacity: .9;
+  fill: #fed7aa;
+  opacity: .95;
 }
 
 .brand-heading { display:flex; align-items:center; gap:12px; }
