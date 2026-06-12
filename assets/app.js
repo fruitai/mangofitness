@@ -3532,6 +3532,16 @@ function initAthleteApp() {
     });
   }
 
+  function renderWeekPickerButtonLabel(label) {
+    return `
+      <svg class="week-picker-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="4" y="5" width="16" height="15" rx="2"></rect>
+        <path d="M8 3v4M16 3v4M4 10h16"></path>
+      </svg>
+      <span>${escapeHtml(label)}</span>
+    `;
+  }
+
   async function loadAthleteProfiles() {
     try {
       const user = await MangoFitnessStore.currentUser();
@@ -3574,7 +3584,7 @@ function initAthleteApp() {
       const workoutStatus = statuses.find((item) => item.workout_id === workout?.id && item.athlete_id === selectedAthleteId);
       selectedWorkoutId = workout?.id || "";
 
-      if (weekLabel) weekLabel.textContent = `Week of ${shortDate(weekStart)} – ${shortDate(weekEnd)}`;
+      if (weekLabel) weekLabel.innerHTML = renderWeekPickerButtonLabel(`Week of ${shortDate(weekStart)} – ${shortDate(weekEnd)}`);
       weekPickerWorkouts = visibleWorkouts;
       renderWeekPicker(weekPickerWorkouts);
       if (workoutCount) workoutCount.textContent = `${weekWorkouts.length} workout${weekWorkouts.length === 1 ? "" : "s"}`;
