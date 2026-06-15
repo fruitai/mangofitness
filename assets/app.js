@@ -3105,6 +3105,20 @@ function exerciseMovementToken(exercise) {
   return String(exercise?.movementKey || exercise?.movementName || exercise?.benchmarkKey || exercise?.benchmarkName || exercise?.name || "").trim().toLowerCase();
 }
 
+const trackHistoryTokens = new Set(["track run", "track run intervals", "1-mile-run", "1 mile run", "800m-run", "800m run"]);
+
+function isTrackHistoryExercise(exercise) {
+  return trackHistoryTokens.has(exerciseMovementToken(exercise)) || String(exercise?.name || "").trim().toLowerCase().startsWith("track run");
+}
+
+function isTrackHistoryResult(result) {
+  return trackHistoryTokens.has(resultMovementToken(result)) || String(result?.exerciseName || "").trim().toLowerCase().startsWith("track run");
+}
+
+function historyResultLabel(result, exercise) {
+  return String(result?.benchmarkName || result?.movementName || result?.exerciseName || exercise?.name || "Exercise").trim();
+}
+
 function numericWeight(value) {
   const match = String(value ?? "").match(/\d+(?:\.\d+)?/);
   return match ? Number(match[0]) : null;
@@ -3175,8 +3189,10 @@ function matchingStrengthResults(results, exercise) {
 
 function matchingExerciseHistoryResults(results, exercise) {
   const token = exerciseMovementToken(exercise);
+  const includeTrackRuns = isTrackHistoryExercise(exercise);
   return (results || []).filter((result) => {
-    if (!token || resultMovementToken(result) !== token) return false;
+    if (!token) return false;
+    if (resultMovementToken(result) !== token && !(includeTrackRuns && isTrackHistoryResult(result))) return false;
     return numericWeight(result.weight) != null || numericReps(result.reps) != null || String(result.score || "").trim();
   });
 }
@@ -3294,9 +3310,10 @@ function renderExerciseHistoryPanel(exercise, athleteResults = [], selectedDate 
                 const weight = result.weight !== "" && result.weight != null ? `${result.weight} lb` : "—";
                 const reps = result.reps ? `${result.reps} reps` : "— reps";
                 const score = String(result.score || "").trim();
+                const label = historyResultLabel(result, exercise);
                 return `
                   <div class="exercise-history-set" data-history-result-id="${escapeHtml(result.id)}">
-                    <span>Set ${escapeHtml(setLabel)}</span>
+                    <span>Set ${escapeHtml(setLabel)}${label ? ` · ${escapeHtml(label)}` : ""}</span>
                     <strong>${score ? escapeHtml(score) : `${escapeHtml(reps)} x ${escapeHtml(weight)}`}${result.isPr ? ` <span class="pr-badge">PR</span>` : ""}</strong>
                   </div>
                 `;
