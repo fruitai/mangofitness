@@ -3098,11 +3098,11 @@ async function aiParseBodyScanFile(file) {
 
 
 function resultMovementToken(result) {
-  return String(result?.movementKey || result?.movementName || result?.exerciseName || "").trim().toLowerCase();
+  return String(result?.movementKey || result?.movementName || result?.benchmarkKey || result?.benchmarkName || result?.exerciseName || "").trim().toLowerCase();
 }
 
 function exerciseMovementToken(exercise) {
-  return String(exercise?.movementKey || exercise?.movementName || exercise?.name || "").trim().toLowerCase();
+  return String(exercise?.movementKey || exercise?.movementName || exercise?.benchmarkKey || exercise?.benchmarkName || exercise?.name || "").trim().toLowerCase();
 }
 
 function numericWeight(value) {
@@ -3293,10 +3293,11 @@ function renderExerciseHistoryPanel(exercise, athleteResults = [], selectedDate 
                 const setLabel = result.setNumber || index + 1;
                 const weight = result.weight !== "" && result.weight != null ? `${result.weight} lb` : "—";
                 const reps = result.reps ? `${result.reps} reps` : "— reps";
+                const score = String(result.score || "").trim();
                 return `
                   <div class="exercise-history-set" data-history-result-id="${escapeHtml(result.id)}">
                     <span>Set ${escapeHtml(setLabel)}</span>
-                    <strong>${escapeHtml(reps)} x ${escapeHtml(weight)}${result.isPr ? ` <span class="pr-badge">PR</span>` : ""}</strong>
+                    <strong>${score ? escapeHtml(score) : `${escapeHtml(reps)} x ${escapeHtml(weight)}`}${result.isPr ? ` <span class="pr-badge">PR</span>` : ""}</strong>
                   </div>
                 `;
               }).join("")}
