@@ -324,6 +324,7 @@ a.button-link:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(15,
 .list-stack {
   display: grid;
   gap: 12px;
+  min-width: 0;
 }
 .exercise-row,
 .item-card,
@@ -331,6 +332,7 @@ a.button-link:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(15,
   border: 1px solid var(--line);
   border-radius: 18px;
   background: var(--soft);
+  min-width: 0;
   padding: 14px;
 }
 .exercise-row {
@@ -412,7 +414,11 @@ a.button-link:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(15,
 }
 .item-head p,
 .item-card p,
-.result-form p { margin: 4px 0 0; line-height: 1.45; }
+.result-form p {
+  line-height: 1.45;
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
 .item-actions { width: auto; justify-content: flex-end; }
 .clean-list {
   margin: 12px 0 0;
@@ -844,6 +850,7 @@ a.button-link:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(15,
   margin-top: 28px;
 }
 .formatted-notes {
+  overflow-wrap: anywhere;
   white-space: pre-line;
 }
 
@@ -2537,6 +2544,8 @@ body.is-moving-coach-program {
 }
 .cardio-option-card {
   border-color: rgba(15, 122, 59, .18);
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 .cardio-option-card.is-selected {
   background: rgba(15, 122, 59, .05);
@@ -2547,6 +2556,10 @@ body.is-moving-coach-program {
   display: grid;
   gap: 12px;
   grid-template-columns: minmax(0, 1fr) auto;
+  min-width: 0;
+}
+.cardio-option-head > div {
+  min-width: 0;
 }
 .cardio-option-head button {
   min-height: 36px;
