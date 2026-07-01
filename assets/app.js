@@ -3216,13 +3216,17 @@ function prescribedPercent(value) {
   return match ? Number(match[1]) : null;
 }
 
+function isPercentPrescription(value) {
+  return /\d+(?:\.\d+)?\s*%/.test(String(value || ""));
+}
+
 function roundTrainingWeight(value) {
   return Math.max(0, Math.round(value / 5) * 5);
 }
 
 function weightSuggestionForExercise(exercise, athleteResults = []) {
-  const prescribed = numericWeight(exercise.weight);
   const percent = prescribedPercent(exercise.weight || exercise.target);
+  const prescribed = isPercentPrescription(exercise.weight) ? null : numericWeight(exercise.weight);
   const oneRepMax = estimatedOneRepMax(athleteResults, exercise);
   const latest = latestStrengthResult(athleteResults, exercise);
   if (percent && oneRepMax) {
