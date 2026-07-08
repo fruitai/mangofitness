@@ -4501,3 +4501,58 @@ body.is-moving-coach-program {
     padding: 6px 8px;
   }
 }
+
+/* Final mobile workout-row override: stack builder rows as cards instead of forcing horizontal spreadsheets. */
+@media (max-width: 760px) {
+  .exercise-rows {
+    display: grid;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .exercise-table-row,
+  .exercise-table-row[data-section="lifting"],
+  .exercise-table-row[data-section="cardio"] {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding: 14px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  .exercise-table-row .field,
+  .exercise-table-row .exercise-name-field,
+  .exercise-table-row .target-field,
+  .exercise-table-row .notes-field,
+  .exercise-table-row .compact-field,
+  .exercise-table-row .remove-row {
+    grid-column: 1 / -1;
+  }
+
+  .exercise-table-row .drag-handle,
+  .exercise-table-row .move-row,
+  .exercise-table-row .remove-row {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    justify-content: flex-start;
+  }
+
+  .exercise-table-row input,
+  .exercise-table-row select,
+  .exercise-table-row textarea,
+  .compact-field input {
+    min-height: 46px;
+    text-align: left;
+  }
+}
