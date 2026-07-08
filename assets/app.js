@@ -5626,6 +5626,12 @@ function initAthleteLeaderboardApp() {
         <div class="item-head"><div><strong>${escapeHtml(eventName)}</strong><p class="muted">${ranked.length} athlete${ranked.length === 1 ? "" : "s"}</p></div><span class="pill">${mode === "lower" ? "Lowest time wins" : "Highest score wins"}</span></div>
         <div class="progress-table-wrap">
           <table class="progress-table leaderboard-table">
+            <colgroup>
+              <col class="leaderboard-rank-col" />
+              <col class="leaderboard-athlete-col" />
+              <col class="leaderboard-best-col" />
+              <col class="leaderboard-date-col" />
+            </colgroup>
             <thead><tr><th>Rank</th><th>Athlete</th><th>Best</th><th>Date</th></tr></thead>
             <tbody>
               ${rankedRows.map(({ result, rank }) => `

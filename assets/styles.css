@@ -1265,7 +1265,26 @@ button.app-tab:hover {
 .leaderboard-list,
 .leaderboard-event-card { min-width: 0; }
 .leaderboard-event-card { background: var(--soft); }
-.leaderboard-table { min-width: 560px; }
+.leaderboard-table {
+  min-width: 520px;
+  table-layout: fixed;
+}
+.leaderboard-rank-col { width: 72px; }
+.leaderboard-athlete-col { width: auto; }
+.leaderboard-best-col { width: 140px; }
+.leaderboard-date-col { width: 112px; }
+.leaderboard-table th:first-child,
+.leaderboard-table td:first-child {
+  text-align: center;
+}
+.leaderboard-table th:nth-child(3),
+.leaderboard-table td:nth-child(3) {
+  text-align: center;
+}
+.leaderboard-table th:nth-child(4),
+.leaderboard-table td:nth-child(4) {
+  text-align: right;
+}
 .movement-table-wrap { touch-action: auto; }
 .movement-library-table { min-width: 760px; }
 .movement-library-table td:nth-child(3) { min-width: 220px; white-space: normal; }
