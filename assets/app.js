@@ -3478,6 +3478,41 @@ function workoutLogDayCount(statuses = [], results = [], workouts = []) {
   return workoutDates.size;
 }
 
+function workoutBlockSummary(workout, section) {
+  if (!workout) return "Not assigned";
+  if (section === "warmup") return workout.warmupNotes ? firstLine(workout.warmupNotes) : "Coach warm-up";
+  const groups = workoutSectionGroups(workout.exercises || []);
+  const group = groups.find((item) => item.section === section) || null;
+  const exercise = group?.exercises?.[0] || null;
+  if (!exercise) return section === "lifting" ? "No strength listed" : "No WOD listed";
+  if (section === "lifting") return [exercise.name, exercise.sets && exercise.reps ? `${exercise.sets} x ${exercise.reps}` : exercise.reps || exercise.target].filter(Boolean).join(" · ");
+  return [exercise.name, exercise.target || workout.cardioNotes && firstLine(workout.cardioNotes)].filter(Boolean).join(" · ");
+}
+
+function renderTodayWorkoutCard(workout, selectedDate, workoutStatus) {
+  const label = selectedDate === todayISO() ? "Today" : shortDate(parseLocalDate(selectedDate));
+  if (!workout) {
+    return `
+      <div class="card-topline"><span class="pill">${escapeHtml(label)}</span><span class="muted">Rest or unassigned</span></div>
+      <h2>No workout assigned</h2>
+      <p class="today-workout-empty">Use the program section below to check the week, or log your own workout if you trained today.</p>
+    `;
+  }
+  return `
+    <div class="card-topline"><span class="pill">${escapeHtml(label)}</span><span class="muted">${workoutStatus?.status === "done" ? "Logged" : "Ready to log"}</span></div>
+    <h2>${escapeHtml(workout.title || "Strength + Conditioning")}</h2>
+    <div class="today-workout-blocks">
+      <div class="workout-block"><span>Warm-up</span><strong>${escapeHtml(workoutBlockSummary(workout, "warmup"))}</strong></div>
+      <div class="workout-block"><span>Strength</span><strong>${escapeHtml(workoutBlockSummary(workout, "lifting"))}</strong></div>
+      <div class="workout-block"><span>WOD</span><strong>${escapeHtml(workoutBlockSummary(workout, "cardio"))}</strong></div>
+    </div>
+    <div class="today-workout-actions">
+      <button type="button" class="primary" data-today-log-results>Log results</button>
+      <button type="button" data-today-start-timer>Start timer</button>
+    </div>
+  `;
+}
+
 function renderAthleteLogCounter(count) {
   return `
     <svg class="athlete-log-flame" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -3514,6 +3549,7 @@ function initAthleteApp() {
   const scheduleView = document.getElementById("athleteScheduleView");
   const profileSelect = document.getElementById("athleteProfileSelect");
   const logCounter = document.getElementById("athleteLogCounter");
+  const todayCard = document.getElementById("athleteTodayCard");
   const weekLabel = document.getElementById("athleteWeekLabel");
   const workoutCount = document.getElementById("athleteWorkoutCount");
   const weekPicker = document.getElementById("athleteWeekPicker");
@@ -3670,6 +3706,12 @@ function initAthleteApp() {
         const count = workoutLogDayCount(athleteStatuses, athleteResults, visibleWorkouts);
         logCounter.classList.toggle("hidden", !selectedAthleteId);
         logCounter.innerHTML = renderAthleteLogCounter(count);
+      }
+      if (todayCard) {
+        todayCard.classList.remove("hidden");
+        todayCard.innerHTML = renderTodayWorkoutCard(workout, date.value, workoutStatus);
+        todayCard.querySelector("[data-today-log-results]")?.addEventListener("click", () => view?.scrollIntoView({ behavior: "smooth", block: "start" }));
+        todayCard.querySelector("[data-today-start-timer]")?.addEventListener("click", () => document.querySelector("[data-timer-expand]")?.click());
       }
       if (weekLabel) weekLabel.innerHTML = renderWeekPickerButtonLabel(`Week of ${shortDate(weekStart)} – ${shortDate(weekEnd)}`);
       weekPickerWorkouts = visibleWorkouts;

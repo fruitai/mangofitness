@@ -880,6 +880,75 @@ button.app-tab:hover {
 .workout-builder-panel.hidden {
   display: none;
 }
+
+.athlete-progress-card,
+.today-workout-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, .88);
+  box-shadow: var(--shadow-card);
+}
+.athlete-progress-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  color: var(--muted);
+}
+.athlete-progress-card strong {
+  color: var(--text);
+  font-size: 28px;
+  line-height: 1;
+}
+.athlete-progress-card span {
+  font-weight: 750;
+}
+.today-workout-card {
+  display: grid;
+  gap: 16px;
+  padding: clamp(20px, 4vw, 28px);
+}
+.today-workout-card h2 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.05;
+  letter-spacing: 0;
+  white-space: normal;
+}
+.card-topline,
+.today-workout-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.today-workout-blocks {
+  display: grid;
+  gap: 10px;
+}
+.workout-block {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.workout-block span {
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+.workout-block strong {
+  text-align: right;
+}
+.today-workout-empty {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
 @media (max-width: 900px) and (orientation: landscape), (max-width: 640px) {
   .coach-command-center {
     grid-template-columns: 1fr;
@@ -887,8 +956,16 @@ button.app-tab:hover {
   .dashboard-stats {
     grid-template-columns: 1fr;
   }
-  .floating-create-button {
+  .floating-create-button,
+  .today-workout-actions button {
     width: 100%;
+  }
+  .workout-block {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .workout-block strong {
+    text-align: left;
   }
 }
 .narrow-field { max-width: 240px; }
