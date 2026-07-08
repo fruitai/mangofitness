@@ -1285,6 +1285,24 @@ button.app-tab:hover {
 .leaderboard-table td:nth-child(4) {
   text-align: right;
 }
+@media (max-width: 640px) {
+  .leaderboard-table {
+    font-size: 13px;
+    min-width: 0;
+  }
+  .leaderboard-rank-col { width: 48px; }
+  .leaderboard-best-col { width: 82px; }
+  .leaderboard-date-col { width: 78px; }
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 9px 5px;
+  }
+  .leaderboard-table th:nth-child(2),
+  .leaderboard-table td:nth-child(2) {
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+}
 .movement-table-wrap { touch-action: auto; }
 .movement-library-table { min-width: 760px; }
 .movement-library-table td:nth-child(3) { min-width: 220px; white-space: normal; }
