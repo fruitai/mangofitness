@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Progress History — Mango Fitness</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260523-athlete-cardio-cleanup" />
+  <link rel="stylesheet" href="assets/styles.css?v=20260708-app-shell" />
   <link rel="manifest" href="manifest.webmanifest?v=20260523-athlete-cardio-cleanup" />
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
@@ -19,26 +19,19 @@
 </head>
 <body>
   <main class="container">
-    <section class="card hero topbar">
+    <section class="card hero topbar app-shell">
       <div class="hero-main">
-        <div class="brand-heading"><div class="brand-mark"><img src="assets/mango-fitness-logo.png" alt="Mango Fitness" /></div><h1>Progress History</h1></div>
-        <nav class="actions top-actions coach-nav">
-          <a href="index.html" class="nav-link">Home</a>
-          <span class="nav-separator">|</span>
-          <a href="admin.html" class="nav-link">Coach portal</a>
-          <span class="nav-separator">|</span>
-          <a href="coach-clients.html" class="nav-link">Clients</a>
-          <span class="nav-separator">|</span>
-          <a href="coach-benchmarks.html" class="nav-link">Benchmarks</a>
-          <span class="nav-separator">|</span>
-          <a href="coach-movements.html" class="nav-link">Movements</a>
-          <span class="nav-separator">|</span>
-          <a href="coach-history.html" class="nav-link active" aria-current="page">Progress history</a>
-          <span class="nav-separator">|</span>
-          <a href="reset-password.html" class="nav-link">Reset password</a>
-          <span id="coachHistorySignOutSeparator" class="nav-separator hidden">|</span>
-          <button type="button" id="coachHistorySignOutBtn" class="nav-link link-button hidden">Sign out</button>
-        </nav>
+        <div class="brand-heading"><a class="brand-mark" href="index.html" aria-label="Mango Fitness home"><img src="assets/mango-fitness-logo.png" alt="Mango Fitness" /></a><h1>Progress History</h1></div>
+        <div class="app-nav-row">
+          <nav class="app-tabs coach-nav" aria-label="Coach navigation">
+            <a href="admin.html" class="app-tab">Workouts</a>
+            <a href="coach-clients.html" class="app-tab">Clients</a>
+            <a href="coach-benchmarks.html" class="app-tab">Benchmarks</a>
+            <a href="coach-movements.html" class="app-tab">Movements</a>
+            <a href="coach-history.html" class="app-tab active" aria-current="page">Progress</a>
+          </nav>
+          <button type="button" id="coachHistorySignOutBtn" class="ghost-button app-sign-out hidden">Sign out</button>
+        </div>
         <div id="coachHistoryHeaderAuth" class="header-auth hidden"><p id="coachHistoryDashboardMessage" class="muted"></p></div>
       </div>
       <p class="muted hero-description">Coach view for reviewing all athlete workout results.</p>

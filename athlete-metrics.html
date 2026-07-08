@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Body Metrics — Mango Fitness</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260523-athlete-cardio-cleanup" />
+  <link rel="stylesheet" href="assets/styles.css?v=20260708-app-shell" />
   <link rel="manifest" href="manifest.webmanifest?v=20260523-athlete-cardio-cleanup" />
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
@@ -20,24 +20,18 @@
 </head>
 <body>
   <main class="container">
-    <section class="card hero topbar">
+    <section class="card hero topbar app-shell">
       <div class="hero-main">
-        <div class="brand-heading"><div class="brand-mark"><img src="assets/mango-fitness-logo.png" alt="Mango Fitness" /></div><h1>Body Metrics</h1></div>
-        <nav class="actions top-actions athlete-nav">
-          <a href="index.html" class="nav-link">Home</a>
-          <span class="nav-separator">|</span>
-          <a href="athlete.html" class="nav-link">Athlete portal</a>
-          <span class="nav-separator">|</span>
-          <a href="athlete-metrics.html" class="nav-link active" aria-current="page">Body metrics</a>
-          <span class="nav-separator">|</span>
-          <a href="athlete-history.html" class="nav-link">Progress history</a>
-          <span class="nav-separator">|</span>
-          <a href="athlete-leaderboard.html" class="nav-link">Leaderboard</a>
-          <span class="nav-separator">|</span>
-          <a href="reset-password.html" class="nav-link">Reset password</a>
-          <span id="metricsSignOutSeparator" class="nav-separator hidden">|</span>
-          <button type="button" id="metricsSignOutBtn" class="nav-link link-button hidden">Sign out</button>
-        </nav>
+        <div class="brand-heading"><a class="brand-mark" href="index.html" aria-label="Mango Fitness home"><img src="assets/mango-fitness-logo.png" alt="Mango Fitness" /></a><h1>Body Metrics</h1></div>
+        <div class="app-nav-row">
+          <nav class="app-tabs athlete-nav" aria-label="Athlete navigation">
+            <a href="athlete.html" class="app-tab">Workouts</a>
+            <a href="athlete-metrics.html" class="app-tab active" aria-current="page">Body Metrics</a>
+            <a href="athlete-history.html" class="app-tab">Progress</a>
+            <a href="athlete-leaderboard.html" class="app-tab">Benchmarks</a>
+          </nav>
+          <button type="button" id="metricsSignOutBtn" class="ghost-button app-sign-out hidden">Sign out</button>
+        </div>
         <div id="metricsHeaderAuth" class="header-auth hidden"><p id="metricsDashboardMessage" class="muted"></p></div>
       </div>
       <p class="muted hero-description">Upload body composition scans and track changes over time.</p>
