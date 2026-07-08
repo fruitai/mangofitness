@@ -3478,6 +3478,10 @@ function workoutLogDayCount(statuses = [], results = [], workouts = []) {
   return workoutDates.size;
 }
 
+function firstLine(value) {
+  return String(value || "").split(/\r?\n/).map((line) => line.trim()).find(Boolean) || "";
+}
+
 function workoutBlockSummary(workout, section) {
   if (!workout) return "Not assigned";
   if (section === "warmup") return workout.warmupNotes ? firstLine(workout.warmupNotes) : "Coach warm-up";
