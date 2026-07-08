@@ -1285,14 +1285,19 @@ button.app-tab:hover {
 .leaderboard-table td:nth-child(4) {
   text-align: right;
 }
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .leaderboard-table {
     font-size: 13px;
     min-width: 0;
+    width: 100%;
   }
-  .leaderboard-rank-col { width: 48px; }
-  .leaderboard-best-col { width: 82px; }
-  .leaderboard-date-col { width: 78px; }
+  .leaderboard-rank-col { width: 44px; }
+  .leaderboard-best-col { width: 96px; }
+  .leaderboard-date-col,
+  .leaderboard-table th:nth-child(4),
+  .leaderboard-table td:nth-child(4) {
+    display: none;
+  }
   .leaderboard-table th,
   .leaderboard-table td {
     padding: 9px 5px;
