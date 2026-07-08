@@ -5613,6 +5613,14 @@ function initAthleteLeaderboardApp() {
       const bv = scoreValue(b, mode);
       return mode === "lower" ? av - bv : bv - av;
     });
+    let currentRank = 0;
+    let previousValue = null;
+    const rankedRows = ranked.map((result, index) => {
+      const value = scoreValue(result, mode);
+      if (index === 0 || value !== previousValue) currentRank = index + 1;
+      previousValue = value;
+      return { result, rank: currentRank };
+    });
     return `
       <section class="item-card leaderboard-event-card">
         <div class="item-head"><div><strong>${escapeHtml(eventName)}</strong><p class="muted">${ranked.length} athlete${ranked.length === 1 ? "" : "s"}</p></div><span class="pill">${mode === "lower" ? "Lowest time wins" : "Highest score wins"}</span></div>
@@ -5620,9 +5628,9 @@ function initAthleteLeaderboardApp() {
           <table class="progress-table leaderboard-table">
             <thead><tr><th>Rank</th><th>Athlete</th><th>Best</th><th>Date</th></tr></thead>
             <tbody>
-              ${ranked.map((result, index) => `
-                <tr class="${index === 0 ? "leaderboard-winner" : ""}">
-                  <td><strong>#${index + 1}</strong></td>
+              ${rankedRows.map(({ result, rank }) => `
+                <tr class="${rank === 1 ? "leaderboard-winner" : ""}">
+                  <td><strong>#${rank}</strong></td>
                   <td>${escapeHtml(leaderboardAthleteName(result))}</td>
                   <td><strong>${escapeHtml(leaderboardDisplayValue(result))}</strong></td>
                   <td>${escapeHtml(displayDate(result.completedOn))}</td>
