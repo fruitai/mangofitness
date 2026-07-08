@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Mango Fitness</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260523-athlete-cardio-cleanup" />
+  <link rel="stylesheet" href="assets/styles.css?v=20260708-landing-refresh" />
   <link rel="manifest" href="manifest.webmanifest?v=20260523-athlete-cardio-cleanup" />
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
@@ -16,26 +16,48 @@
   <meta name="apple-mobile-web-app-title" content="Mango Fitness" />
 </head>
 <body>
-  <main class="container home-container">
-    <section class="card hero home-hero">
-      <div class="home-brand-row">
-        <div class="brand-mark home-logo"><img src="assets/mango-fitness-logo.png" alt="Mango Fitness" /></div>
-        <div class="home-kicker">Coach + athlete workout tracking</div>
+  <main class="landing">
+    <section class="landing-hero" aria-labelledby="landingTitle">
+      <div class="landing-copy">
+        <div class="home-brand-row landing-brand-row">
+          <div class="brand-mark home-logo"><img src="assets/mango-fitness-logo.png" alt="Mango Fitness" /></div>
+          <p class="eyebrow">Coach + athlete training platform</p>
+        </div>
+        <h1 id="landingTitle">Programming, workout logs, PRs, and body metrics in one place.</h1>
+        <p class="landing-lead">Mango Fitness helps coaches assign workouts and athletes track progress without spreadsheets or group chat chaos.</p>
+        <div class="landing-actions" aria-label="Portal login links">
+          <a class="primary button-link" href="admin.html">Coach login</a>
+          <a class="button-link" href="athlete.html">Athlete login</a>
+        </div>
       </div>
-      <p class="muted hero-description home-lead">Weekly programming, daily workouts, working weights, PRs, body metrics, and progress tracking in one clean place.</p>
+
+      <aside class="landing-preview-card" aria-label="Mango Fitness workout preview">
+        <div class="preview-card-header">
+          <span class="pill">Today</span>
+          <span>Week 3</span>
+        </div>
+        <h2>Strength + WOD</h2>
+        <div class="preview-workout-list">
+          <p><strong>Back Squat</strong><span>5 x 5</span></p>
+          <p><strong>AMRAP</strong><span>12 min, rounds + reps</span></p>
+          <p><strong>Body Metrics</strong><span>Weight, scan, notes</span></p>
+        </div>
+        <div class="preview-stats">
+          <strong>3 PRs</strong>
+          <span>logged this week</span>
+        </div>
+      </aside>
     </section>
 
-    <section class="home-login-grid">
-      <div class="card home-login-card">
-        <h2>Coach Portal</h2>
-        <p>Create weekly programs, assign athletes, manage workouts, and review progress history.</p>
-        <a class="button-link" href="admin.html">Open coach portal</a>
-      </div>
-      <div class="card home-login-card">
-        <h2>Athlete Portal</h2>
-        <p>See workouts, log training results, upload body scans, and track progress over time.</p>
-        <a class="button-link" href="athlete.html">Open athlete portal</a>
-      </div>
+    <section class="landing-role-grid" aria-label="Choose a portal">
+      <a class="landing-role-card" href="admin.html">
+        <span>Coach</span>
+        <strong>Build programming and monitor progress.</strong>
+      </a>
+      <a class="landing-role-card" href="athlete.html">
+        <span>Athlete</span>
+        <strong>Log today’s workout and track results.</strong>
+      </a>
     </section>
   </main>
 </body>
