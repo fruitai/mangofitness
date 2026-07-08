@@ -290,6 +290,14 @@ h2 { margin:0 0 10px; font-size:22px; letter-spacing:-.02em; }
   margin-bottom: 0;
   flex-wrap: wrap;
 }
+.landing .home-logo {
+  width: 220px;
+  height: 100px;
+  border-radius: 24px;
+}
+.landing .home-logo img {
+  width: 198px;
+}
 .eyebrow {
   margin: 0;
   color: var(--green-dark);
@@ -599,8 +607,8 @@ button.app-tab:hover {
     align-items: center;
     gap: 12px;
   }
-  .home-logo { width:150px; height:70px; border-radius:20px; }
-  .home-logo img { width:136px; }
+  .landing .home-logo { width:150px; height:70px; border-radius:20px; }
+  .landing .home-logo img { width:136px; }
   .eyebrow { font-size: 12px; }
   .landing-lead {
     font-size: 16px;
