@@ -17,7 +17,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/supabase-config.js"></script>
 </head>
-<body>
+<body class="has-mobile-bottom-nav">
   <main class="container">
     <section class="card hero topbar app-shell">
       <div class="hero-main">
@@ -102,6 +102,12 @@
 
     </section>
   </main>
+  <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+    <a href="athlete.html" class="active" aria-current="page">Today</a>
+    <a href="athlete-history.html">Progress</a>
+    <a href="athlete-metrics.html">Metrics</a>
+    <a href="athlete-leaderboard.html">Board</a>
+  </nav>
   <script src="assets/auth.js"></script>
   <aside id="athleteWorkoutTimer" class="workout-timer hidden" data-state="collapsed" aria-label="Workout timer">
     <button type="button" class="workout-timer-fab" data-timer-expand aria-label="Open workout timer">

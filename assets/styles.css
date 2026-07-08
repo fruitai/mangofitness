@@ -350,6 +350,10 @@ button.app-tab:hover {
 .muted { color:var(--muted); }
 .hidden { display:none !important; }
 
+.mobile-bottom-nav {
+  display: none;
+}
+
 @media (max-width: 900px) and (orientation: landscape) {
   .hero-main > div:first-child { width:100%; flex:0 0 100%; }
   .hero .top-actions { width:100%; justify-content:flex-start; }
@@ -393,6 +397,49 @@ button.app-tab:hover {
 }
 
 @media (max-width: 640px) {
+
+  body.has-mobile-bottom-nav {
+    padding-bottom: calc(74px + env(safe-area-inset-bottom));
+  }
+  .app-tabs.athlete-nav .app-tab:not(.app-sign-out) {
+    display: none;
+  }
+  .app-tabs.athlete-nav {
+    justify-content: flex-end;
+  }
+  .mobile-bottom-nav {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    z-index: 80;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    padding: 6px;
+    border: 1px solid rgba(15, 23, 42, .10);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, .96);
+    box-shadow: 0 16px 34px rgba(15, 23, 42, .16);
+    backdrop-filter: blur(14px);
+  }
+  .mobile-bottom-nav a {
+    min-width: 0;
+    padding: 10px 6px;
+    border-radius: 12px;
+    color: #516055;
+    font-size: 12px;
+    font-weight: 850;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .mobile-bottom-nav a.active,
+  .mobile-bottom-nav a[aria-current="page"] {
+    background: linear-gradient(135deg, #ffb703, #22c55e);
+    color: #132018;
+  }
   .container { padding:14px; padding-bottom:28px; }
   .home-container { padding-top:18px; padding-bottom:42px; }
   .card { padding:16px; border-radius:18px; }
