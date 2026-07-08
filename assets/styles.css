@@ -1,13 +1,33 @@
 :root {
-  --bg: #f8fff4;
-  --card: #ffffff;
-  --text: #132018;
-  --muted: #5f6f63;
-  --line: #d9f5c9;
-  --accent: #ffb703;
-  --accent-dark: #0f7a3b;
-  --accent-green: #22c55e;
-  --soft: #f0fdf4;
+  --color-bg: #f8fff4;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f0fdf4;
+  --color-text: #132018;
+  --color-muted: #5f6f63;
+  --color-mango: #ffb703;
+  --color-green: #22c55e;
+  --color-green-dark: #0f7a3b;
+  --color-danger: #b91c1c;
+  --border-soft: #d9f5c9;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+  --shadow-card: 0 14px 34px rgba(15, 23, 42, 0.08);
+  --shadow-lifted: 0 22px 54px rgba(15, 23, 42, 0.14);
+  --page-max: 1180px;
+  --card-max: 980px;
+
+  --bg: var(--color-bg);
+  --card: var(--color-surface);
+  --text: var(--color-text);
+  --muted: var(--color-muted);
+  --line: var(--border-soft);
+  --accent: var(--color-mango);
+  --accent-dark: var(--color-green-dark);
+  --accent-green: var(--color-green);
+  --green-dark: var(--color-green-dark);
+  --soft: var(--color-surface-soft);
 }
 
 * { box-sizing: border-box; }
