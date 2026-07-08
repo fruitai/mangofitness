@@ -5618,7 +5618,7 @@ function initAthleteLeaderboardApp() {
         <div class="item-head"><div><strong>${escapeHtml(eventName)}</strong><p class="muted">${ranked.length} athlete${ranked.length === 1 ? "" : "s"}</p></div><span class="pill">${mode === "lower" ? "Lowest time wins" : "Highest score wins"}</span></div>
         <div class="progress-table-wrap">
           <table class="progress-table leaderboard-table">
-            <thead><tr><th>Rank</th><th>Athlete</th><th>Best</th><th>Date</th><th>Notes</th></tr></thead>
+            <thead><tr><th>Rank</th><th>Athlete</th><th>Best</th><th>Date</th></tr></thead>
             <tbody>
               ${ranked.map((result, index) => `
                 <tr class="${index === 0 ? "leaderboard-winner" : ""}">
@@ -5626,7 +5626,6 @@ function initAthleteLeaderboardApp() {
                   <td>${escapeHtml(leaderboardAthleteName(result))}</td>
                   <td><strong>${escapeHtml(leaderboardDisplayValue(result))}</strong></td>
                   <td>${escapeHtml(displayDate(result.completedOn))}</td>
-                  <td>${escapeHtml(result.notes || "")}</td>
                 </tr>
               `).join("")}
             </tbody>
@@ -5660,7 +5659,7 @@ function initAthleteLeaderboardApp() {
         const event = eventKey(result);
         if (!event) return;
         if (selectedType !== "all" && event.type !== selectedType) return;
-        const haystack = [event.name, result.exerciseName, leaderboardAthleteName(result), result.score, result.notes].join(" ").toLowerCase();
+        const haystack = [event.name, result.exerciseName, leaderboardAthleteName(result), result.score].join(" ").toLowerCase();
         if (term && !haystack.includes(term)) return;
         const key = `${event.name}::${result.athleteId}`;
         const current = bestByEventAndAthlete.get(key);

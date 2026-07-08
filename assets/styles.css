@@ -1265,8 +1265,7 @@ button.app-tab:hover {
 .leaderboard-list,
 .leaderboard-event-card { min-width: 0; }
 .leaderboard-event-card { background: var(--soft); }
-.leaderboard-table { min-width: 720px; }
-.leaderboard-table td:nth-child(5) { min-width: 180px; white-space: normal; }
+.leaderboard-table { min-width: 560px; }
 .movement-table-wrap { touch-action: auto; }
 .movement-library-table { min-width: 760px; }
 .movement-library-table td:nth-child(3) { min-width: 220px; white-space: normal; }
