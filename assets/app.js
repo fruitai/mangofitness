@@ -1662,6 +1662,49 @@ function initCoachApp() {
     return `<option value="">View athlete logs</option>${assignedAthletes.map((athlete) => `<option value="${escapeHtml(athlete.id)}"${athlete.id === selectedId ? " selected" : ""}>${escapeHtml(athlete.name)}</option>`).join("")}`;
   }
 
+  function workoutSummaryLine(exercise) {
+    if (!exercise) return "Not programmed";
+    const details = exerciseSummary(exercise);
+    return `${exercise.name || "Untitled movement"}${details ? ` · ${details}` : ""}`;
+  }
+
+  function workoutSectionSummary(workout, section) {
+    if (section === "warmup") return firstLine(workout.warmupNotes) || "Not programmed";
+    const exercise = (workout.exercises || []).find((item) => (item.section || "lifting") === section);
+    if (section === "cardio") return firstLine(workout.cardioNotes) || workoutSummaryLine(exercise);
+    return workoutSummaryLine(exercise);
+  }
+
+  function renderWorkoutCardSummaries(workout) {
+    return `
+      <div class="program-summary-grid">
+        <div class="program-summary-block">
+          <span>Warm-up</span>
+          <strong>${escapeHtml(workoutSectionSummary(workout, "warmup"))}</strong>
+        </div>
+        <div class="program-summary-block">
+          <span>Strength</span>
+          <strong>${escapeHtml(workoutSectionSummary(workout, "lifting"))}</strong>
+        </div>
+        <div class="program-summary-block">
+          <span>WOD</span>
+          <strong>${escapeHtml(workoutSectionSummary(workout, "cardio"))}</strong>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderProgramMoreMenu(workout) {
+    return `
+      <details class="program-more-menu">
+        <summary>More</summary>
+        <div class="program-more-panel">
+          <button type="button" class="danger-button" data-delete="${escapeHtml(workout.id)}">Delete workout</button>
+        </div>
+      </details>
+    `;
+  }
+
   function renderWorkoutProgramCard(workout, results, compact = false) {
     const selectedAthleteId = document.getElementById(`coachProgramAthlete-${workout.id}`)?.value || "";
     const selectedAthlete = athleteProfiles.find((athlete) => athlete.id === selectedAthleteId);
@@ -1669,16 +1712,24 @@ function initCoachApp() {
       ? results.filter((result) => result.athleteId === selectedAthleteId && result.workoutId === workout.id)
       : [];
     return `
-      <article class="${compact ? "calendar-workout-card" : "item-card"}" data-program-card="${escapeHtml(workout.id)}">
+      <article class="${compact ? "calendar-workout-card workout-program-card compact-workout-card" : "item-card workout-program-card"}" data-program-card="${escapeHtml(workout.id)}">
         <${compact ? "strong" : "div class=\"item-head\""}>${compact ? escapeHtml(workout.title) : `
-          <div><strong>${escapeHtml(workout.title)}</strong><p class="muted">${escapeHtml(workout.date)} · ${workout.exercises.length} items · ${workoutAssignmentLabel(workout)}</p></div>
-          <div class="actions item-actions">
-            <button type="button" data-edit="${workout.id}">Edit</button>
-            <button type="button" data-copy="${workout.id}">Copy</button>
-            <button type="button" data-delete="${workout.id}">Delete</button>
+          <div class="program-card-title-group">
+            <div class="program-card-topline">
+              <span class="program-date-pill">${escapeHtml(displayDate(workout.date))}</span>
+              <span class="program-assignment-pill">${workoutAssignmentLabel(workout)}</span>
+              <span class="program-item-count">${workout.exercises.length} items</span>
+            </div>
+            <strong>${escapeHtml(workout.title)}</strong>
+          </div>
+          <div class="actions item-actions program-card-actions">
+            <button type="button" data-edit="${escapeHtml(workout.id)}">Edit</button>
+            <button type="button" data-copy="${escapeHtml(workout.id)}">Copy</button>
+            <button type="button" data-focus-program-athlete="${escapeHtml(workout.id)}">View logs</button>
+            ${renderProgramMoreMenu(workout)}
           </div>
         `}</${compact ? "strong" : "div"}>
-        ${compact ? `<p class="muted">${workout.exercises.length} items · ${workoutAssignmentLabel(workout)}${workout.warmupNotes ? " · Warm-up" : ""}${workout.cardioNotes ? " · WOD" : ""}</p><div data-inline-workout-editor></div>` : `<div data-inline-workout-editor></div>`}
+        ${compact ? `<p class="muted">${workout.exercises.length} items · ${workoutAssignmentLabel(workout)}${workout.warmupNotes ? " · Warm-up" : ""}${workout.cardioNotes ? " · WOD" : ""}</p><div data-inline-workout-editor></div>` : `${renderWorkoutCardSummaries(workout)}<div data-inline-workout-editor></div>`}
         <div class="program-readonly-content">
           <div class="field coach-program-athlete-field">
           <label for="coachProgramAthlete-${escapeHtml(workout.id)}">View athlete logs in this program</label>
@@ -1688,7 +1739,7 @@ function initCoachApp() {
         ${!compact && workout.notes ? `<p class="formatted-notes">${escapeHtml(workout.notes)}</p>` : ""}
         ${workout.warmupNotes ? `<div class="exercise-group"><h4>Warm-up</h4><p class="formatted-notes">${escapeHtml(workout.warmupNotes)}</p></div>` : ""}
         ${renderExerciseGroups(workout.exercises, { showLogs: Boolean(selectedAthleteId), results: workoutResults, cardioNotes: workout.cardioNotes })}
-        ${compact ? `<div class="actions calendar-card-actions"><button type="button" data-edit="${workout.id}">Edit</button><button type="button" data-copy="${workout.id}">Copy</button><button type="button" class="danger-button" data-delete="${workout.id}">Delete</button></div>` : ""}
+        ${compact ? `<div class="actions calendar-card-actions program-card-actions"><button type="button" data-edit="${escapeHtml(workout.id)}">Edit</button><button type="button" data-copy="${escapeHtml(workout.id)}">Copy</button>${renderProgramMoreMenu(workout)}</div>` : ""}
         </div>
       </article>
     `;
@@ -2428,6 +2479,12 @@ function initCoachApp() {
         editWorkout(button.dataset.edit, { inlineContainer }).catch((error) => setAppMessage(friendlyError(error), true));
       }));
       list.querySelectorAll("[data-copy]").forEach((button) => button.addEventListener("click", () => copyWorkout(button.dataset.copy).catch((error) => setAppMessage(friendlyError(error), true))));
+      list.querySelectorAll("[data-focus-program-athlete]").forEach((button) => button.addEventListener("click", () => {
+        const card = button.closest("[data-program-card]");
+        const select = card?.querySelector("[data-program-athlete]");
+        select?.scrollIntoView({ behavior: "smooth", block: "center" });
+        select?.focus();
+      }));
       list.querySelectorAll("[data-program-athlete]").forEach((select) => select.addEventListener("change", renderCoach));
       list.querySelectorAll("[data-delete]").forEach((button) => button.addEventListener("click", async () => {
         const workoutTitle = button.closest("[data-program-card]")?.querySelector("strong")?.textContent || "this workout";

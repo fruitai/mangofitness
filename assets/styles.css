@@ -812,6 +812,122 @@ button.app-tab:hover {
   overflow-wrap: anywhere;
 }
 .item-actions { width: auto; justify-content: flex-end; }
+.workout-program-card {
+  background: white;
+  border-color: var(--border-soft);
+  box-shadow: var(--shadow-card);
+}
+.workout-program-card > .item-head {
+  align-items: start;
+}
+.program-card-title-group {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.program-card-title-group > strong {
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1.2;
+}
+.program-card-topline {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.program-date-pill,
+.program-assignment-pill {
+  align-items: center;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--green-dark);
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 800;
+  min-height: 30px;
+  padding: 5px 10px;
+}
+.program-assignment-pill {
+  background: rgba(240, 253, 244, .72);
+}
+.program-item-count {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+.program-summary-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 14px;
+}
+.program-summary-block {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 12px;
+}
+.program-summary-block span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.program-summary-block strong {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.program-card-actions {
+  align-items: center;
+}
+.program-more-menu {
+  position: relative;
+}
+.program-more-menu summary {
+  align-items: center;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 700;
+  justify-content: center;
+  list-style: none;
+  min-height: 44px;
+  padding: 10px 12px;
+}
+.program-more-menu summary::-webkit-details-marker {
+  display: none;
+}
+.program-more-panel {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+  display: grid;
+  gap: 8px;
+  min-width: 170px;
+  padding: 8px;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 12;
+}
+.program-more-menu:not([open]) .program-more-panel {
+  display: none;
+}
+.program-more-panel .danger-button {
+  width: 100%;
+}
 .clean-list {
   margin: 12px 0 0;
   padding-left: 18px;
@@ -2593,12 +2709,42 @@ body.is-moving-coach-program {
 .calendar-workout-card:has(.inline-workout-editor:not(.hidden)) .program-readonly-content {
   display: none;
 }
+.item-card:has(.inline-workout-editor:not(.hidden)) > .program-summary-grid,
+.calendar-workout-card:has(.inline-workout-editor:not(.hidden)) > .program-summary-grid {
+  display: none;
+}
 .item-card:has(.inline-workout-editor:not(.hidden)) > .item-head,
 .calendar-workout-card:has(.inline-workout-editor:not(.hidden)) > .item-head {
   align-items: flex-start;
 }
 
 @media (max-width: 760px) {
+  .workout-program-card > .item-head {
+    display: grid;
+  }
+  .program-card-title-group > strong {
+    font-size: 18px;
+  }
+  .program-summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .program-card-actions {
+    justify-content: stretch;
+    width: 100%;
+  }
+  .program-card-actions > button,
+  .program-card-actions > .program-more-menu {
+    flex: 1 1 140px;
+  }
+  .program-more-menu summary {
+    width: 100%;
+  }
+  .program-more-panel {
+    position: static;
+    margin-top: 8px;
+    min-width: 0;
+    width: 100%;
+  }
   .athlete-filter-grid .narrow-field {
     width: 100%;
     max-width: none;
