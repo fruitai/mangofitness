@@ -5670,12 +5670,7 @@ function initAthleteLeaderboardApp() {
         map.get(item.event.name).results.push(item.result);
         return map;
       }, new Map());
-      const eventOrder = ["Angie", "Cindy", "Murph", "Fran", "Helen", "Grace", "Annie", "Row 2K", "3K Row", "4K Row"];
-      const groups = [...eventGroups.values()].sort((a, b) => {
-        const ai = eventOrder.indexOf(a.event.name);
-        const bi = eventOrder.indexOf(b.event.name);
-        return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi) || a.event.name.localeCompare(b.event.name);
-      });
+      const groups = [...eventGroups.values()].sort((a, b) => a.event.name.localeCompare(b.event.name));
       list.innerHTML = groups.length ? `<div class="list-stack leaderboard-list">${groups.map((group) => renderLeaderboardEvent(group.event.name, group.results, group.event.mode)).join("")}</div>` : `<p class="muted empty-state">No leaderboard results found yet.</p>`;
     } catch (error) {
       list.innerHTML = `<p class="muted empty-state">${escapeHtml(friendlyError(error))}</p>`;
