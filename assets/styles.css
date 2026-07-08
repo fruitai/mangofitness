@@ -507,6 +507,16 @@ button.app-tab:hover {
   .actions > * { flex:1 1 calc(50% - 8px); }
   .hero .top-actions > * { flex:0 0 auto; }
 
+  .coach-command-center {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+  .floating-create-button {
+    width: 100%;
+  }
+
   .app-shell .brand-mark {
     width: 116px;
     height: 54px;
@@ -633,6 +643,16 @@ button.app-tab:hover {
   .actions { width:100%; }
   .actions > * { flex:1 1 calc(50% - 8px); }
   .hero .top-actions > * { flex:0 0 auto; }
+
+  .coach-command-center {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+  .floating-create-button {
+    width: 100%;
+  }
 
   .app-shell .brand-mark {
     width: 116px;
@@ -810,6 +830,67 @@ button.app-tab:hover {
   white-space: nowrap;
 }
 .empty-state { margin: 0; }
+
+.coach-command-center {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: 16px;
+}
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.stat-card {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, .86);
+  box-shadow: var(--shadow-card);
+}
+.stat-card span {
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+.stat-card strong {
+  color: var(--text);
+  font-size: 32px;
+  line-height: 1;
+}
+.stat-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.35;
+}
+.floating-create-button {
+  align-self: center;
+  min-width: 170px;
+  border-radius: 999px;
+  box-shadow: 0 14px 30px rgba(34, 197, 94, .22);
+  white-space: nowrap;
+}
+.workout-builder-panel.hidden {
+  display: none;
+}
+@media (max-width: 900px) and (orientation: landscape), (max-width: 640px) {
+  .coach-command-center {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+  .floating-create-button {
+    width: 100%;
+  }
+}
 .narrow-field { max-width: 240px; }
 .progress-filter-grid {
   display: grid;

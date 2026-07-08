@@ -1303,6 +1303,10 @@ function initCoachApp() {
   const thisWeekBtn = document.getElementById("thisWeekBtn");
   const nextWeekBtn = document.getElementById("nextWeekBtn");
   const savedWorkoutViewToggleBtn = document.getElementById("savedWorkoutViewToggleBtn");
+  const workoutBuilderPanel = document.getElementById("workoutBuilderPanel");
+  const statWorkoutCount = document.getElementById("statWorkoutCount");
+  const statClientCount = document.getElementById("statClientCount");
+  const statLogCount = document.getElementById("statLogCount");
   const message = document.getElementById("coachAppMessage");
   const formHome = document.createComment("workout-form-home");
   form.after(formHome);
@@ -1404,9 +1408,11 @@ function initCoachApp() {
     try {
       athleteProfiles = await MangoFitnessStore.athletes();
       renderAthleteOptions();
+      if (statClientCount) statClientCount.textContent = String(athleteProfiles.length);
     } catch (error) {
       athleteProfiles = [];
       renderAthleteOptions();
+      if (statClientCount) statClientCount.textContent = "0";
       setAppMessage(friendlyError(error), true);
     }
   }
@@ -1763,8 +1769,12 @@ function initCoachApp() {
       options.inlineContainer.innerHTML = "";
       options.inlineContainer.appendChild(form);
       form.classList.add("inline-workout-editor");
+      workoutBuilderPanel?.classList.add("hidden");
     } else if (show) {
       returnWorkoutFormHome();
+      workoutBuilderPanel?.classList.remove("hidden");
+    } else {
+      workoutBuilderPanel?.classList.add("hidden");
     }
     form.classList.toggle("hidden", !show);
     showWorkoutFormBtn?.classList.toggle("hidden", show && !options.inlineContainer);
@@ -2123,6 +2133,24 @@ function initCoachApp() {
     `;
   }
 
+  function updateCoachDashboardStats(workouts = [], results = []) {
+    const weekStart = selectedWeekStart;
+    const weekEnd = addDays(weekStart, 6);
+    const weekWorkouts = workouts.filter((workout) => {
+      const workoutDate = parseLocalDate(workout.date);
+      return workoutDate >= weekStart && workoutDate <= weekEnd;
+    });
+    const weekResults = results.filter((result) => {
+      const resultDateValue = result.completedOn || String(result.createdAt || "").slice(0, 10);
+      if (!resultDateValue) return false;
+      const resultDate = parseLocalDate(resultDateValue);
+      return resultDate >= weekStart && resultDate <= weekEnd;
+    });
+    if (statWorkoutCount) statWorkoutCount.textContent = String(weekWorkouts.length);
+    if (statClientCount) statClientCount.textContent = String(athleteProfiles.length);
+    if (statLogCount) statLogCount.textContent = String(weekResults.length);
+  }
+
   async function renderCoach() {
     try {
       const workouts = await MangoFitnessStore.workouts();
@@ -2144,6 +2172,7 @@ function initCoachApp() {
         const workoutDate = parseLocalDate(workout.date);
         return workoutDate >= weekStart && workoutDate <= weekEnd;
       });
+      updateCoachDashboardStats(workouts, results);
 
       count.textContent = searchQuery
         ? `${visibleWorkouts.length} match${visibleWorkouts.length === 1 ? "" : "es"}`
@@ -2411,6 +2440,7 @@ function initCoachApp() {
         }
       }));
     } catch (error) {
+      updateCoachDashboardStats([], []);
       count.textContent = "0 workouts";
       list.className = "list-stack";
       list.innerHTML = `<p class="muted empty-state">${escapeHtml(friendlyError(error))}</p>`;
