@@ -64,6 +64,34 @@ body {
   box-shadow: 0 20px 46px rgba(34,197,94,.20);
 }
 
+.card.hero.app-shell {
+  border: 1px solid rgba(217, 245, 201, .82);
+  color: var(--text);
+  background:
+    linear-gradient(140deg, rgba(255, 255, 255, .94), rgba(240, 253, 244, .88)),
+    radial-gradient(circle at 82% 18%, rgba(255, 183, 3, .22), transparent 16rem),
+    radial-gradient(circle at 12% 92%, rgba(34, 197, 94, .16), transparent 18rem);
+  box-shadow: var(--shadow-card);
+}
+.card.hero.app-shell .muted {
+  color: var(--muted);
+}
+.card.hero.app-shell .app-tab,
+.card.hero.app-shell button.app-tab {
+  color: #516055;
+}
+.card.hero.app-shell .app-tab:hover,
+.card.hero.app-shell button.app-tab:hover,
+.card.hero.app-shell .app-tab.active,
+.card.hero.app-shell .app-tab[aria-current="page"] {
+  color: var(--green-dark);
+}
+.card.hero.app-shell .athlete-log-counter {
+  border-color: rgba(15, 122, 59, .16);
+  background: rgba(255, 255, 255, .72);
+  color: var(--green-dark);
+}
+
 .topbar {
   display: flex;
   justify-content: space-between;
