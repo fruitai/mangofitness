@@ -4345,6 +4345,35 @@ body.is-moving-coach-program {
   display: block;
   min-width: 1.25em;
 }
+.timer-start-icon {
+  color: var(--green-dark);
+  height: 18px;
+  position: relative;
+  width: 18px;
+}
+.timer-start-icon.is-start {
+  height: 0;
+  margin-left: 3px;
+  width: 0;
+  border-bottom: 9px solid transparent;
+  border-left: 14px solid currentColor;
+  border-top: 9px solid transparent;
+}
+.timer-start-icon.is-pause {
+  display: inline-grid;
+  grid-template-columns: repeat(2, 5px);
+  gap: 5px;
+  justify-content: center;
+}
+.timer-start-icon.is-pause::before,
+.timer-start-icon.is-pause::after {
+  background: currentColor;
+  border-radius: 999px;
+  content: "";
+  display: block;
+  height: 18px;
+  width: 5px;
+}
 .workout-timer-strip {
   align-items: center;
   border: 0;

@@ -4592,7 +4592,10 @@ function initWorkoutTimer() {
     if (stripLabel) stripLabel.textContent = modeText;
     if (modeLabel) modeLabel.textContent = modeText;
     if (meta) meta.textContent = metaText;
-    if (startIcon) startIcon.textContent = state.running ? "⏸" : "▶";
+    if (startIcon) {
+      startIcon.classList.toggle("is-pause", state.running);
+      startIcon.classList.toggle("is-start", !state.running);
+    }
     if (startBtn) {
       const label = state.running ? "Pause timer" : "Start timer";
       startBtn.setAttribute("aria-label", label);
