@@ -556,6 +556,7 @@ button.app-tab:hover {
 
   body.has-mobile-bottom-nav {
     padding-bottom: calc(74px + env(safe-area-inset-bottom));
+    --mobile-bottom-nav-clearance: calc(86px + env(safe-area-inset-bottom));
   }
   .app-tabs.athlete-nav .app-tab:not(.app-sign-out) {
     display: none;
@@ -4495,6 +4496,42 @@ body.is-moving-coach-program {
   }
   .workout-timer-time {
     font-size: 48px;
+  }
+}
+@media (max-width: 640px) {
+  body.has-mobile-bottom-nav .workout-timer:not([data-state="collapsed"]) {
+    bottom: var(--mobile-bottom-nav-clearance);
+    z-index: 90;
+  }
+
+  body.has-mobile-bottom-nav .workout-timer[data-state="strip"] {
+    bottom: var(--mobile-bottom-nav-clearance);
+    left: 12px;
+    right: 12px;
+  }
+
+  body.has-mobile-bottom-nav .workout-timer[data-state="expanded"] {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: auto;
+    z-index: 120;
+  }
+
+  body.has-mobile-bottom-nav .workout-timer[data-state="expanded"] .workout-timer-panel {
+    border: 0;
+    border-radius: 0;
+    height: 100dvh;
+    max-height: none;
+  }
+
+  body.has-mobile-bottom-nav .workout-timer[data-state="expanded"] .workout-timer-head {
+    padding-top: calc(12px + env(safe-area-inset-top));
+  }
+
+  body.has-mobile-bottom-nav .workout-timer[data-state="expanded"] .workout-timer-body {
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
   }
 }
 .strength-progress-sessions {
