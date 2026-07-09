@@ -212,10 +212,10 @@ h2 { margin:0 0 10px; font-size:22px; letter-spacing:-.02em; }
   overflow-wrap: anywhere;
   white-space: normal;
 }
-.athlete-page .app-shell h1 {
+.app-shell h1 {
   font-size: 30px;
   font-weight: 760;
-  letter-spacing: -.015em;
+  letter-spacing: 0;
   line-height: 1.08;
 }
 .app-nav-row {
@@ -2000,12 +2000,12 @@ body.is-reordering .exercise-row.dragging {
   .header-auth p {
     line-height: 1.35;
   }
-  .athlete-page .app-shell h1 {
+  .app-shell h1 {
     font-size: 22px;
     font-weight: 760;
     letter-spacing: 0;
   }
-  .athlete-page .app-shell .brand-heading {
+  .app-shell .brand-heading {
     gap: 10px;
   }
   .header-auth .header-sign-out {
