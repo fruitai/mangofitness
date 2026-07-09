@@ -212,6 +212,12 @@ h2 { margin:0 0 10px; font-size:22px; letter-spacing:-.02em; }
   overflow-wrap: anywhere;
   white-space: normal;
 }
+.athlete-page .app-shell h1 {
+  font-size: 30px;
+  font-weight: 760;
+  letter-spacing: -.015em;
+  line-height: 1.08;
+}
 .app-nav-row {
   display: flex;
   align-items: center;
@@ -1961,16 +1967,50 @@ body.is-reordering .exercise-row.dragging {
   margin-top: 4px;
 }
 .header-auth p {
+  min-width: 0;
   margin: 0;
   color: rgba(255, 255, 255, .9);
   font-weight: 700;
 }
+.header-auth .header-sign-out {
+  appearance: none;
+  flex: 0 0 auto;
+  min-height: 34px;
+  padding: 7px 13px;
+  border: 1px solid rgba(15, 122, 59, .16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .78);
+  color: var(--green-dark);
+  box-shadow: none;
+  font-size: 13px;
+  font-weight: 850;
+}
+.header-auth .header-sign-out:hover {
+  background: var(--soft);
+  border-color: rgba(15, 122, 59, .28);
+  box-shadow: none;
+  transform: none;
+}
 @media (max-width: 640px) {
   .header-auth {
-    justify-content: flex-start;
-    align-items: stretch;
-    display: grid;
-    gap: 8px;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .header-auth p {
+    line-height: 1.35;
+  }
+  .athlete-page .app-shell h1 {
+    font-size: 22px;
+    font-weight: 760;
+    letter-spacing: 0;
+  }
+  .athlete-page .app-shell .brand-heading {
+    gap: 10px;
+  }
+  .header-auth .header-sign-out {
+    min-height: 32px;
+    padding: 7px 12px;
   }
 }
 

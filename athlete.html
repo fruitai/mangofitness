@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Athlete Portal — Mango Fitness</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260709-mobile-timer-title" />
+  <link rel="stylesheet" href="assets/styles.css?v=20260709-athlete-header-polish" />
   <link rel="manifest" href="manifest.webmanifest?v=20260523-athlete-cardio-cleanup" />
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
@@ -17,7 +17,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/supabase-config.js"></script>
 </head>
-<body class="has-mobile-bottom-nav">
+<body class="has-mobile-bottom-nav athlete-page">
   <main class="container">
     <section class="card hero topbar app-shell">
       <div class="hero-main">
@@ -28,11 +28,11 @@
             <a href="athlete-metrics.html" class="app-tab">Body Metrics</a>
             <a href="athlete-history.html" class="app-tab">Progress</a>
             <a href="athlete-leaderboard.html" class="app-tab">Benchmarks</a>
-            <button type="button" id="athleteSignOutBtn" class="app-tab app-sign-out hidden">Sign out</button>
           </nav>
         </div>
         <div id="athleteHeaderAuth" class="header-auth hidden">
           <p id="athleteDashboardMessage" class="muted"></p>
+          <button type="button" id="athleteSignOutBtn" class="app-sign-out header-sign-out hidden">Sign out</button>
         </div>
       </div>
       <p class="muted hero-description">View today’s workout, enter working weights, log PRs, and track progress.</p>
