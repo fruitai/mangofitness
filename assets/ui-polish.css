@@ -1,0 +1,318 @@
+/* Mango Fitness UI polish layer.
+   Loaded after styles.css so these rules refine the current design without rewriting the base system. */
+
+:root {
+  --surface-glass: rgba(255, 255, 255, .88);
+  --surface-glass-strong: rgba(255, 255, 255, .96);
+  --pill-green: #ecfdf3;
+  --pill-green-hover: #dcfce7;
+  --pill-mango: #fff7d6;
+  --pill-ink: #132018;
+  --ring-green: rgba(15, 122, 59, .28);
+}
+
+body {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(255, 183, 3, .18), transparent 28rem),
+    radial-gradient(circle at 92% 14%, rgba(34, 197, 94, .14), transparent 30rem),
+    linear-gradient(180deg, #ffffff 0%, var(--color-bg) 58%, #efffe8 100%);
+}
+
+:focus-visible {
+  outline: 3px solid var(--ring-green);
+  outline-offset: 3px;
+}
+
+.container {
+  width: min(100%, var(--page-max));
+}
+
+.card,
+.dashboard-card,
+.item-card,
+.result-form,
+.calendar-workout-card,
+.today-workout-card,
+.athlete-progress-card,
+.stat-card {
+  box-shadow: var(--shadow-card);
+}
+
+.card.hero.app-shell {
+  position: sticky;
+  top: 12px;
+  z-index: 45;
+  border-radius: 28px;
+  backdrop-filter: blur(16px);
+}
+
+.app-shell h1 {
+  white-space: normal;
+}
+
+.app-tabs,
+button.app-tab {
+  scrollbar-width: none;
+}
+
+.app-tab,
+button.app-tab {
+  border-radius: 999px;
+  color: #516055;
+  min-height: 38px;
+  padding: 10px 13px;
+  text-decoration: none;
+}
+
+.card.hero.app-shell .app-tab:hover,
+.card.hero.app-shell button.app-tab:hover,
+.card.hero.app-shell .app-tab.active,
+.card.hero.app-shell .app-tab[aria-current="page"] {
+  background: var(--pill-green);
+  border-color: rgba(15, 122, 59, .18);
+  color: var(--green-dark);
+  text-decoration: none;
+}
+
+button.primary,
+a.primary.button-link,
+.landing-actions .button-link:first-child,
+.floating-create-button,
+.today-workout-actions .primary,
+form .primary[type="submit"] {
+  background: var(--pill-green);
+  border: 1px solid rgba(15, 122, 59, .22);
+  border-radius: 999px;
+  color: var(--green-dark);
+  box-shadow: 0 8px 18px rgba(15, 122, 59, .08);
+  font-weight: 850;
+}
+
+button.primary:hover,
+a.primary.button-link:hover,
+.landing-actions .button-link:first-child:hover,
+.floating-create-button:hover,
+.today-workout-actions .primary:hover,
+form .primary[type="submit"]:hover {
+  background: var(--pill-green-hover);
+  border-color: rgba(15, 122, 59, .32);
+  box-shadow: 0 12px 24px rgba(15, 122, 59, .12);
+}
+
+.landing-actions .button-link:not(:first-child),
+button.secondary,
+a.secondary.button-link {
+  background: var(--surface-glass);
+  border-color: rgba(15, 122, 59, .14);
+  border-radius: 999px;
+  color: var(--pill-ink);
+  box-shadow: none;
+  font-weight: 750;
+}
+
+.floating-create-button,
+.today-workout-actions button,
+form .primary[type="submit"] {
+  min-height: 48px;
+  padding-inline: 18px;
+}
+
+.danger-button,
+.scan-delete-btn,
+.scan-summary-actions .scan-delete-btn {
+  background: #fff7f7;
+  border: 1px solid #fecaca;
+  border-radius: 999px;
+  color: #b91c1c;
+  box-shadow: none;
+}
+
+.danger-button:hover,
+.scan-delete-btn:hover,
+.scan-summary-actions .scan-delete-btn:hover {
+  background: #fee2e2;
+  box-shadow: 0 8px 18px rgba(185, 28, 28, .08);
+}
+
+.landing-hero,
+.card.hero.app-shell,
+.today-workout-card,
+.athlete-progress-card,
+.dashboard-card {
+  border-color: rgba(15, 122, 59, .12);
+}
+
+.landing-preview-card {
+  transform: translateZ(0);
+}
+
+.preview-workout-list p:last-child,
+.workout-block:last-child {
+  border-bottom: 0;
+}
+
+.coach-command-center,
+.dashboard-stack {
+  align-items: start;
+}
+
+.stat-card {
+  background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(240,253,244,.72));
+}
+
+.stat-card strong {
+  letter-spacing: -.04em;
+}
+
+.today-workout-card {
+  background:
+    radial-gradient(circle at 94% 8%, rgba(255, 183, 3, .16), transparent 14rem),
+    linear-gradient(180deg, rgba(255,255,255,.98), rgba(240,253,244,.72));
+}
+
+.athlete-progress-card {
+  background: var(--surface-glass-strong);
+}
+
+.program-schedule-card,
+.workout-builder-panel,
+.dashboard-card {
+  background: rgba(255,255,255,.92);
+}
+
+.item-card,
+.result-form,
+.calendar-workout-card {
+  background: var(--surface-glass-strong);
+  border-color: rgba(15, 122, 59, .12);
+}
+
+.item-actions button,
+.calendar-card-actions button,
+.workout-timer-head-actions button,
+.week-actions button,
+.exercise-actions button,
+.template-actions button {
+  border-radius: 999px;
+}
+
+.workout-status-form button,
+.self-workout-toggle {
+  border-radius: 999px;
+}
+
+input,
+textarea,
+select {
+  border-color: rgba(15, 122, 59, .16);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.82);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: rgba(15, 122, 59, .42);
+  outline: 3px solid rgba(15, 122, 59, .16);
+}
+
+.week-picker-popover,
+.movement-suggestions,
+.coach-month-window-panel,
+.workout-timer-panel {
+  border-color: rgba(15, 122, 59, .14);
+  box-shadow: 0 22px 54px rgba(15, 23, 42, .14);
+}
+
+.mobile-bottom-nav {
+  border-color: rgba(15, 122, 59, .14);
+}
+
+.mobile-bottom-nav a {
+  border: 1px solid transparent;
+}
+
+.mobile-bottom-nav a.active,
+.mobile-bottom-nav a[aria-current="page"] {
+  background: var(--pill-green);
+  border-color: rgba(15, 122, 59, .20);
+  color: var(--green-dark);
+}
+
+.workout-timer[data-state="collapsed"] .workout-timer-fab {
+  color: var(--green-dark);
+  background: var(--surface-glass-strong);
+  border: 1px solid rgba(15, 122, 59, .14);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, .12);
+  filter: none;
+}
+
+@media (max-width: 900px) {
+  .card.hero.app-shell {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .dashboard-card,
+  .today-workout-card,
+  .athlete-progress-card {
+    border-radius: 20px;
+  }
+
+  .card.hero.app-shell {
+    border-radius: 22px;
+  }
+
+  .app-tab,
+  button.app-tab {
+    min-height: 40px;
+  }
+
+  .section-head.compact {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  body.has-mobile-bottom-nav .workout-timer[data-state="strip"] {
+    bottom: calc(82px + env(safe-area-inset-bottom));
+  }
+
+  body.has-mobile-bottom-nav .workout-timer[data-state="expanded"] {
+    z-index: 120;
+  }
+
+  .mobile-bottom-nav {
+    z-index: 90;
+  }
+
+  .landing-copy h1 {
+    font-size: clamp(32px, 10vw, 42px);
+  }
+
+  .app-shell h1 {
+    font-size: clamp(20px, 6vw, 24px);
+  }
+
+  .today-workout-actions,
+  .landing-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 380px) {
+  .app-shell .brand-mark {
+    width: 98px;
+    height: 48px;
+  }
+
+  .app-shell .brand-mark img {
+    width: 88px;
+  }
+
+  .mobile-bottom-nav a {
+    font-size: 11px;
+    padding-inline: 4px;
+  }
+}
