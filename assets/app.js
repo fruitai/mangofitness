@@ -4512,6 +4512,7 @@ function initWorkoutTimer() {
   const durationInput = timer.querySelector("[data-timer-duration]");
   const intervalInput = timer.querySelector("[data-timer-interval]");
   const startBtn = timer.querySelector("[data-timer-start]");
+  const startIcon = timer.querySelector("[data-timer-start-icon]");
   const resetBtn = timer.querySelector("[data-timer-reset]");
   const editBtn = timer.querySelector("[data-timer-edit]");
   const storageKey = "mangoFitness.workoutTimer.v1";
@@ -4591,7 +4592,12 @@ function initWorkoutTimer() {
     if (stripLabel) stripLabel.textContent = modeText;
     if (modeLabel) modeLabel.textContent = modeText;
     if (meta) meta.textContent = metaText;
-    if (startBtn) startBtn.textContent = state.running ? "Stop" : "Start";
+    if (startIcon) startIcon.textContent = state.running ? "⏸" : "▶";
+    if (startBtn) {
+      const label = state.running ? "Pause timer" : "Start timer";
+      startBtn.setAttribute("aria-label", label);
+      startBtn.title = label;
+    }
   }
 
   function syncSettingsFields() {
