@@ -1319,6 +1319,7 @@ function initCoachApp() {
   let coachMonthClipboard = null;
   let coachMonthDragState = null;
   let suppressCoachMonthClick = false;
+  const selectedProgramAthleteIds = {};
 
 
   function renderCoachWeekPicker(workoutsForDots) {
@@ -1706,7 +1707,7 @@ function initCoachApp() {
   }
 
   function renderWorkoutProgramCard(workout, results, compact = false) {
-    const selectedAthleteId = document.getElementById(`coachProgramAthlete-${workout.id}`)?.value || "";
+    const selectedAthleteId = selectedProgramAthleteIds[workout.id] || document.getElementById(`coachProgramAthlete-${workout.id}`)?.value || "";
     const selectedAthlete = athleteProfiles.find((athlete) => athlete.id === selectedAthleteId);
     const workoutResults = selectedAthleteId
       ? results.filter((result) => result.athleteId === selectedAthleteId && result.workoutId === workout.id)
@@ -2309,10 +2310,6 @@ function initCoachApp() {
             <div data-inline-workout-editor></div>
             <div class="list-stack">${workouts.length ? workouts.map((workout) => renderWorkoutProgramCard(workout, results)).join("") : ""}</div>
           `;
-          detail.querySelectorAll("[data-edit]").forEach((editButton) => editButton.addEventListener("click", () => {
-            const inlineContainer = editButton.closest("[data-program-card]")?.querySelector("[data-inline-workout-editor]") || detail.querySelector("[data-inline-workout-editor]");
-            editWorkout(editButton.dataset.edit, { inlineContainer }).catch((error) => setAppMessage(friendlyError(error), true));
-          }));
           detail.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
       }));
@@ -2398,21 +2395,6 @@ function initCoachApp() {
           monthWindow?.addEventListener("click", (windowEvent) => {
             if (windowEvent.target === monthWindow) monthWindow.remove();
           });
-          monthWindow?.querySelectorAll("[data-edit]").forEach((editButton) => editButton.addEventListener("click", () => {
-            const inlineContainer = editButton.closest("[data-program-card]")?.querySelector("[data-inline-workout-editor]");
-            editWorkout(editButton.dataset.edit, { inlineContainer }).catch((error) => setAppMessage(friendlyError(error), true));
-          }));
-          monthWindow?.querySelectorAll("[data-delete]").forEach((deleteButton) => deleteButton.addEventListener("click", async () => {
-            const workoutTitle = deleteButton.closest("[data-program-card]")?.querySelector("strong")?.textContent || "this workout";
-            if (!confirm(`Delete ${workoutTitle}? This cannot be undone.`)) return;
-            try {
-              await MangoFitnessStore.deleteWorkout(deleteButton.dataset.delete);
-              monthWindow.remove();
-              await renderCoach();
-            } catch (error) {
-              setAppMessage(friendlyError(error), true);
-            }
-          }));
         });
       });
       list.querySelectorAll("[data-coach-month-draggable]").forEach((noteElement) => {
@@ -2474,28 +2456,6 @@ function initCoachApp() {
           }
         });
       });
-      list.querySelectorAll("[data-edit]").forEach((button) => button.addEventListener("click", () => {
-        const inlineContainer = button.closest("[data-program-card]")?.querySelector("[data-inline-workout-editor]") || button.closest("[data-coach-horizontal-detail]")?.querySelector("[data-inline-workout-editor]");
-        editWorkout(button.dataset.edit, { inlineContainer }).catch((error) => setAppMessage(friendlyError(error), true));
-      }));
-      list.querySelectorAll("[data-copy]").forEach((button) => button.addEventListener("click", () => copyWorkout(button.dataset.copy).catch((error) => setAppMessage(friendlyError(error), true))));
-      list.querySelectorAll("[data-focus-program-athlete]").forEach((button) => button.addEventListener("click", () => {
-        const card = button.closest("[data-program-card]");
-        const select = card?.querySelector("[data-program-athlete]");
-        select?.scrollIntoView({ behavior: "smooth", block: "center" });
-        select?.focus();
-      }));
-      list.querySelectorAll("[data-program-athlete]").forEach((select) => select.addEventListener("change", renderCoach));
-      list.querySelectorAll("[data-delete]").forEach((button) => button.addEventListener("click", async () => {
-        const workoutTitle = button.closest("[data-program-card]")?.querySelector("strong")?.textContent || "this workout";
-        if (!confirm(`Delete ${workoutTitle}? This cannot be undone.`)) return;
-        try {
-          await MangoFitnessStore.deleteWorkout(button.dataset.delete);
-          await renderCoach();
-        } catch (error) {
-          setAppMessage(friendlyError(error), true);
-        }
-      }));
     } catch (error) {
       updateCoachDashboardStats([], []);
       count.textContent = "0 workouts";
@@ -2503,6 +2463,55 @@ function initCoachApp() {
       list.innerHTML = `<p class="muted empty-state">${escapeHtml(friendlyError(error))}</p>`;
     }
   }
+
+  list?.addEventListener("click", async (event) => {
+    const editButton = event.target.closest("[data-edit]");
+    if (editButton && list.contains(editButton)) {
+      event.stopPropagation();
+      const inlineContainer = editButton.closest("[data-program-card]")?.querySelector("[data-inline-workout-editor]")
+        || editButton.closest("[data-coach-horizontal-detail]")?.querySelector("[data-inline-workout-editor]");
+      editWorkout(editButton.dataset.edit, { inlineContainer }).catch((error) => setAppMessage(friendlyError(error), true));
+      return;
+    }
+
+    const copyButton = event.target.closest("[data-copy]");
+    if (copyButton && list.contains(copyButton)) {
+      event.stopPropagation();
+      copyWorkout(copyButton.dataset.copy).catch((error) => setAppMessage(friendlyError(error), true));
+      return;
+    }
+
+    const focusButton = event.target.closest("[data-focus-program-athlete]");
+    if (focusButton && list.contains(focusButton)) {
+      event.stopPropagation();
+      const card = focusButton.closest("[data-program-card]");
+      const select = card?.querySelector("[data-program-athlete]");
+      select?.scrollIntoView({ behavior: "smooth", block: "center" });
+      select?.focus();
+      return;
+    }
+
+    const deleteButton = event.target.closest("[data-delete]");
+    if (deleteButton && list.contains(deleteButton)) {
+      event.stopPropagation();
+      const workoutTitle = deleteButton.closest("[data-program-card]")?.querySelector("strong")?.textContent || "this workout";
+      if (!confirm(`Delete ${workoutTitle}? This cannot be undone.`)) return;
+      try {
+        await MangoFitnessStore.deleteWorkout(deleteButton.dataset.delete);
+        deleteButton.closest("[data-coach-month-window]")?.remove();
+        await renderCoach();
+      } catch (error) {
+        setAppMessage(friendlyError(error), true);
+      }
+    }
+  });
+
+  list?.addEventListener("change", (event) => {
+    const select = event.target.closest("[data-program-athlete]");
+    if (!select || !list.contains(select)) return;
+    selectedProgramAthleteIds[select.dataset.programAthlete] = select.value;
+    renderCoach();
+  });
 
   assignmentType?.addEventListener("change", updateAssignmentVisibility);
 

@@ -1461,24 +1461,6 @@ button.app-tab:hover {
 }
 .compact-field input { text-align: center; }
 
-@media (max-width: 900px) {
-  .exercise-rows {
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-  .exercise-table-row {
-    min-width: 920px;
-  }
-}
-
-@media (max-width: 760px) {
-  .exercise-table-row {
-    grid-template-columns: 38px 34px 34px minmax(150px, 1.2fr) 70px 70px 96px 110px 140px auto;
-  }
-  .exercise-table-row .remove-row {
-    min-width: 86px;
-  }
-}
 .exercise-actions {
   justify-content: flex-start;
   margin-top: -2px;
@@ -1602,49 +1584,7 @@ button.app-tab:hover {
   }
 }
 
-/* Keep workout rows horizontal on mobile, but make them scroll instead of squeezing. */
-@media (max-width: 760px) {
-  .exercise-rows {
-    overflow-x: auto;
-    padding-bottom: 8px;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .exercise-table-row {
-    min-width: 940px;
-    grid-template-columns: 38px 34px 34px minmax(170px, 1.2fr) 76px 86px 110px 130px 150px 92px;
-    align-items: end;
-  }
-
-  .exercise-table-row .exercise-name-field,
-  .exercise-table-row .target-field,
-  .exercise-table-row .notes-field,
-  .exercise-table-row .compact-field,
-  .exercise-table-row .remove-row {
-    grid-column: auto;
-  }
-
-  .exercise-table-row .drag-handle,
-  .exercise-table-row .move-row {
-    width: 34px;
-  }
-
-  .exercise-table-row .remove-row {
-    width: auto;
-    min-width: 86px;
-  }
-
-  .exercise-table-row input {
-    min-height: 42px;
-    padding: 10px 12px;
-  }
-
-  .compact-field input {
-    text-align: center;
-  }
-}
-
-/* Mobile containment fix: keep the page narrow and make only workout tables scroll. */
+/* Mobile containment fix: keep the page narrow. */
 @media (max-width: 760px) {
   html,
   body {
@@ -1661,37 +1601,11 @@ button.app-tab:hover {
     min-width: 0;
     max-width: 100%;
   }
-
-  .exercise-rows {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    overflow-x: auto;
-    overflow-y: visible;
-    padding: 0 0 10px;
-    overscroll-behavior-x: contain;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .exercise-table-row {
-    width: 880px;
-    min-width: 880px;
-    max-width: none;
-  }
 }
 
 /* Cardio score rows only need score item, score type, and notes. */
 .exercise-table-row[data-section="cardio"] {
   grid-template-columns: 44px 36px 36px minmax(220px, 1.4fr) minmax(180px, 1fr) minmax(220px, 1.2fr) auto;
-}
-
-@media (max-width: 760px) {
-  .exercise-table-row[data-section="cardio"] {
-    width: 720px;
-    min-width: 720px;
-    grid-template-columns: 38px 34px 34px 210px 170px 180px 92px;
-  }
 }
 
 .exercise-table-row[data-section="cardio"] {
@@ -1700,14 +1614,6 @@ button.app-tab:hover {
 .exercise-table-row select {
   min-height: 42px;
   padding: 10px 12px;
-}
-
-@media (max-width: 760px) {
-  .exercise-table-row[data-section="cardio"] {
-    width: 860px;
-    min-width: 860px;
-    grid-template-columns: 38px 34px 34px 180px 210px 150px 180px 92px;
-  }
 }
 
 .warmup-template-grid {
@@ -1759,13 +1665,6 @@ button.app-tab:hover {
   grid-template-columns: 44px 36px 36px minmax(170px, 1fr) minmax(180px, 1.1fr) minmax(72px, .55fr) minmax(72px, .55fr) minmax(100px, .75fr) minmax(120px, .9fr) minmax(150px, 1fr) auto;
 }
 
-@media (max-width: 760px) {
-  .exercise-table-row[data-section="lifting"] {
-    width: 1040px;
-    min-width: 1040px;
-    grid-template-columns: 38px 34px 34px 180px 190px 76px 86px 110px 130px 150px 92px;
-  }
-}
 .movement-manager {
   margin-top: 12px;
 }
@@ -1773,14 +1672,6 @@ button.app-tab:hover {
 /* Strength rows use the autocomplete as the movement field, no duplicate station field. */
 .exercise-table-row[data-section="lifting"] {
   grid-template-columns: 44px 36px 36px minmax(220px, 1.45fr) minmax(72px, .55fr) minmax(72px, .55fr) minmax(100px, .75fr) minmax(120px, .9fr) minmax(150px, 1fr) auto;
-}
-
-@media (max-width: 760px) {
-  .exercise-table-row[data-section="lifting"] {
-    width: 900px;
-    min-width: 900px;
-    grid-template-columns: 38px 34px 34px 230px 76px 86px 110px 130px 150px 92px;
-  }
 }
 
 .movement-map-field {
@@ -1869,19 +1760,6 @@ body.is-reordering .exercise-row.dragging {
   outline: 2px solid rgba(15, 122, 59, .24);
 }
 
-@media (max-width: 760px) {
-  .exercise-table-row[data-section="lifting"] {
-    grid-template-columns: 48px minmax(230px, 1.45fr) 76px 86px 110px 130px 150px 92px;
-    width: 875px;
-    min-width: 875px;
-  }
-  .exercise-table-row[data-section="cardio"] {
-    grid-template-columns: 48px 180px 210px 150px 180px 92px;
-    width: 770px;
-    min-width: 770px;
-  }
-}
-
 .exercise-table-row {
   grid-template-columns: 48px minmax(180px, 1.35fr) minmax(72px, .55fr) minmax(72px, .55fr) minmax(100px, .75fr) minmax(120px, .9fr) minmax(150px, 1fr) auto;
 }
@@ -1897,13 +1775,6 @@ body.is-reordering .exercise-row.dragging {
   grid-template-columns: 48px minmax(190px, 1fr) minmax(160px, .9fr) minmax(240px, 1.3fr) auto;
 }
 
-@media (max-width: 760px) {
-  .exercise-table-row[data-section="cardio"] {
-    width: 690px;
-    min-width: 690px;
-    grid-template-columns: 48px 210px 150px 190px 92px;
-  }
-}
 .benchmark-manager {
   margin-top: 12px;
 }
