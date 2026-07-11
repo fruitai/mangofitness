@@ -3558,27 +3558,28 @@ function compactUniqueParts(parts) {
   });
 }
 
-function dailyExerciseSummary(exercise, section) {
-  if (!exercise) return "";
-  const setRepLine = exercise.sets && exercise.reps ? `${exercise.sets} x ${exercise.reps}` : exercise.reps || "";
-  const parts = section === "lifting"
-    ? [exercise.name, setRepLine, exercise.weight, exercise.target, firstLine(exercise.notes)]
-    : [exercise.name, firstLine(exercise.notes), exercise.target, setRepLine];
-  return compactUniqueParts(parts).join(" · ");
+function briefSummary(value, maxLength = 84) {
+  const text = firstLine(value);
+  if (text.length <= maxLength) return text;
+  return `${text.slice(0, maxLength - 1).trim()}…`;
 }
 
 function workoutBlockSummary(workout, section) {
   if (!workout) return "Not assigned";
-  if (section === "warmup") return workout.warmupNotes ? firstLine(workout.warmupNotes) : "Coach warm-up";
+  if (section === "warmup") return briefSummary(workout.warmupNotes) || "Coach warm-up";
   const sections = section === "wod" ? ["wod", "cardio", "partner"] : [section];
   const exercises = (workout.exercises || []).filter((exercise) => sections.includes(exercise.section || "cardio"));
-  const exerciseSummaries = compactUniqueParts(exercises.map((exercise) => dailyExerciseSummary(exercise, section)));
   if (section === "wod") {
-    const wodNotes = firstLine(workout.cardioNotes);
-    const summary = compactUniqueParts([wodNotes, ...exerciseSummaries]).join(" · ");
-    return summary || "No WOD listed";
+    const primaryExercise = exercises[0] || null;
+    const summary = briefSummary(workout.cardioNotes)
+      || briefSummary(primaryExercise?.notes)
+      || compactUniqueParts([primaryExercise?.name, primaryExercise?.target]).join(" · ");
+    return briefSummary(summary) || "No WOD listed";
   }
-  return exerciseSummaries.join(" · ") || "No strength listed";
+  const movementNames = compactUniqueParts(exercises.map((exercise) => exercise.name)).slice(0, 2);
+  if (!movementNames.length) return "No strength listed";
+  const remaining = exercises.length - movementNames.length;
+  return `${movementNames.join(" + ")}${remaining > 0 ? ` + ${remaining} more` : ""}`;
 }
 
 function renderTodayWorkoutCard(workout, selectedDate, workoutStatus) {
