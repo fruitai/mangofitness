@@ -718,6 +718,18 @@ button.app-tab:hover {
   margin: 0 auto;
   position: relative;
 }
+.athlete-page .dashboard-stack {
+  width: 100%;
+}
+.athlete-page .program-schedule-card {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+.athlete-page .program-schedule-card .athlete-program-calendar {
+  width: 100%;
+}
 .section-head {
   display: flex;
   justify-content: space-between;
