@@ -607,35 +607,6 @@ button.app-tab:hover {
   }
 }
 
-px;
-  }
-  .app-shell .portal-heading h1 {
-    font-size: 24px;
-  }
-  .app-nav-row {
-    width: 100%;
-    flex: 1 1 100%;
-    justify-content: flex-start;
-    gap: 8px;
-    margin-left: 0;
-    flex-wrap: wrap;
-  }
-  .app-tabs {
-    flex: 1 1 100%;
-    min-width: 0;
-    flex-wrap: wrap;
-    overflow-x: visible;
-  }
-  .app-tab,
-  button.app-tab {
-    flex: 1 1 auto;
-    min-height: 32px;
-    padding: 8px 9px;
-    font-size: 12px;
-    text-align: center;
-  }
-}
-
 @media (max-width: 380px) {
   .app-shell h1 {
     font-size: 20px;
