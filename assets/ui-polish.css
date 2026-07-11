@@ -302,13 +302,9 @@ select:focus {
 }
 
 @media (max-width: 380px) {
-  .app-shell .brand-mark {
-    width: 98px;
-    height: 48px;
-  }
-
-  .app-shell .brand-mark img {
-    width: 88px;
+  .app-shell .portal-brand-logo,
+  .app-shell .app-brand-logo {
+    width: 155px;
   }
 
   .mobile-bottom-nav a {

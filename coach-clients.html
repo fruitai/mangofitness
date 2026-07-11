@@ -6,14 +6,14 @@
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>Clients — Mango Fitness</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20260711-app-logo-size" />
-  <link rel="manifest" href="manifest.webmanifest?v=20260523-athlete-cardio-cleanup" />
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260711-copied-chat" />
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png?v=20260711-copied-chat" />
+  <title>MangoFitness | Clients</title>
+  <link rel="stylesheet" href="assets/styles.css?v=20260711-logo-uniform" />
+  <link rel="manifest" href="manifest.webmanifest?v=20260711-logo-uniform" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=20260711-logo-uniform" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png?v=20260711-logo-uniform" />
   <meta name="theme-color" content="#f59e0b" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="Mango Fitness" />
+  <meta name="apple-mobile-web-app-title" content="MangoFitness" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/supabase-config.js"></script>
 </head>
@@ -21,7 +21,15 @@
   <main class="container">
     <section class="card hero topbar app-shell">
       <div class="hero-main">
-        <div class="brand-heading"><a class="brand-mark" href="index.html" aria-label="Mango Fitness home"><img src="assets/mango-fitness-logo.png?v=20260711-copied-chat" alt="Mango Fitness" /></a><h1>Clients</h1></div>
+        <div class="brand-heading app-header-inner">
+          <a class="brand-home-link" href="index.html" aria-label="MangoFitness home">
+            <img class="app-brand-logo portal-brand-logo" src="assets/mango-fitness-logo-transparent.png?v=20260711-logo-uniform" alt="MangoFitness" />
+          </a>
+          <div class="portal-heading">
+            <p class="portal-eyebrow">MangoFitness</p>
+            <h1>Clients</h1>
+          </div>
+        </div>
         <div class="app-nav-row">
           <nav class="app-tabs coach-nav" aria-label="Coach navigation">
             <a href="admin.html" class="app-tab">Workouts</a>
@@ -92,7 +100,7 @@
     </section>
   </main>
   <script src="assets/auth.js"></script>
-  <script src="assets/app.js?v=20260709-mobile-timer-title"></script>
+  <script src="assets/app.js?v=20260711-logo-uniform"></script>
   <script>
     initLoginPage({ emailId:"coachClientsEmail", passwordId:"coachClientsPassword", signInBtnId:"coachClientsSignInBtn", forgotBtnId:"coachClientsForgotBtn", signOutBtnId:"coachClientsSignOutBtn", authCardId:"coachClientsAuthCard", dashboardId:"coachClientsDashboard", messageId:"coachClientsAuthMessage", dashboardMessageId:"coachClientsDashboardMessage", requiredRole:"coach" });
     initCoachClientsApp();

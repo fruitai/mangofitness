@@ -1,7 +1,7 @@
 {
-  "name": "Mango Fitness",
-  "short_name": "Mango Fitness",
-  "description": "Mango Fitness athlete and coach portal.",
+  "name": "MangoFitness",
+  "short_name": "MangoFitness",
+  "description": "MangoFitness athlete and coach portal.",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
