@@ -161,8 +161,7 @@ body {
   flex: 0 1 auto;
 }
 .brand-home-link,
-.logo-wrap,
-.brand-mark {
+.logo-wrap {
   display: inline-flex;
   align-items: center;
   flex: 0 0 auto;
@@ -176,10 +175,9 @@ body {
 }
 .app-brand-logo,
 .portal-brand-logo,
-.landing-brand-logo,
-.brand-mark img {
+.landing-brand-logo {
   display: block;
-  width: clamp(185px, 19vw, 225px);
+  width: clamp(210px, 23vw, 280px);
   max-width: 100%;
   height: auto;
   object-fit: contain;
@@ -196,18 +194,10 @@ body {
 .portal-heading h1,
 h1 {
   margin: 0;
-  font-size: clamp(24px, 2.5vw, 34px);
-  line-height: 1.05;
-  letter-spacing: -0.035em;
+  font-size: clamp(18px, 1.7vw, 24px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
   white-space: normal;
-}
-.portal-eyebrow {
-  margin: 0 0 4px;
-  color: rgba(255,255,255,.78);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
 }
 .header-actions {
   margin-left: auto;
@@ -344,7 +334,7 @@ h2 { margin:0 0 10px; font-size:22px; letter-spacing:-.02em; }
   flex: 0 0 auto;
 }
 .landing .home-logo .landing-brand-logo {
-  width: clamp(210px, 22vw, 255px);
+  width: clamp(245px, 26vw, 330px);
 }
 .eyebrow {
   margin: 0;
@@ -566,7 +556,7 @@ button.app-tab:hover {
   }
 
   .app-shell .portal-brand-logo {
-    width: 185px;
+    width: 220px;
   }
   .app-shell .portal-heading h1 {
     font-size: 24px;
@@ -597,7 +587,7 @@ button.app-tab:hover {
 
 @media (max-width: 760px) {
   .app-shell .portal-brand-logo {
-    width: 165px;
+    width: 195px;
   }
 }
 
@@ -613,7 +603,7 @@ button.app-tab:hover {
   }
   .app-brand-logo,
   .portal-brand-logo {
-    width: 165px;
+    width: 190px;
   }
 }
 
@@ -4724,6 +4714,6 @@ body.is-moving-coach-program {
   .app-shell .portal-brand-logo,
   .app-shell .app-brand-logo,
   .landing .home-logo .landing-brand-logo {
-    width: 165px;
+    width: 190px;
   }
 }

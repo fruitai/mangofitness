@@ -1,4 +1,4 @@
-# Mango Fitness code/security review — 2026-05-20
+# MangoFitness code/security review — 2026-05-20
 
 ## Executive summary
 

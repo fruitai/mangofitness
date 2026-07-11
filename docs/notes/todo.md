@@ -1,4 +1,4 @@
-# Mango Fitness Todo / Open Questions
+# MangoFitness Todo / Open Questions
 
 ## Verify
 

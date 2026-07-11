@@ -1,4 +1,4 @@
--- Mango Fitness MVP schema
+-- MangoFitness MVP schema
 -- Apply in Supabase SQL Editor.
 -- This MVP policy is intentionally simple: any signed-in user can read/write workout data.
 -- Before production, tighten policies so coaches manage workouts and athletes only see their own assignments/results.

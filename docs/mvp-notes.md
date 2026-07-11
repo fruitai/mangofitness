@@ -1,4 +1,4 @@
-# Mango Fitness MVP Notes
+# MangoFitness MVP Notes
 
 ## Roles
 

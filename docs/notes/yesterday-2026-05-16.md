@@ -1,10 +1,10 @@
-# Mango Fitness Notes from 2026-05-16
+# MangoFitness Notes from 2026-05-16
 
 These notes preserve the important project details from yesterday’s work.
 
 ## Layout direction Lawrence approved
 
-- Keep the Mango Fitness layout direction with weekly Saved Workouts calendar and filters.
+- Keep the MangoFitness layout direction with weekly Saved Workouts calendar and filters.
 - Keep the class/everyone vs individual athlete programming model.
 - Saved Workouts filter behavior:
   - Everyone/class filter shows group workouts only.
@@ -122,4 +122,4 @@ Mango Loan was briefly updated during the session:
 - `a670db1 Clean up stale admin MFA factors`
 - `991072d Brighten Mango Loan theme`
 
-Then work returned to Mango Fitness.
+Then work returned to MangoFitness.

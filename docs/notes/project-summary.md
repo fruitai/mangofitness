@@ -1,4 +1,4 @@
-# Mango Fitness Project Summary
+# MangoFitness Project Summary
 
 ## Repository
 

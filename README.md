@@ -1,6 +1,6 @@
-# Mango Fitness
+# MangoFitness
 
-Mango Fitness is a coach + athlete workout tracking app.
+MangoFitness is a coach + athlete workout tracking app.
 
 ## MVP
 

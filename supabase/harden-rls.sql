@@ -1,4 +1,4 @@
--- Mango Fitness RLS hardening migration
+-- MangoFitness RLS hardening migration
 -- Apply this in Supabase SQL Editor after creating/linking coach auth users.
 -- It adds coach_profiles and replaces broad MVP policies with coach/athlete-scoped policies.
 
