@@ -3564,16 +3564,49 @@ function briefSummary(value, maxLength = 84) {
   return `${text.slice(0, maxLength - 1).trim()}…`;
 }
 
+function instructionTitle(value) {
+  const text = firstLine(value);
+  if (!text) return "";
+  const beforeNumber = text.match(/^([A-Za-z][A-Za-z\s/&+-]*?)(?=\s+\d)/)?.[1]?.trim();
+  if (beforeNumber) return beforeNumber;
+  const beforeSeparator = text.match(/^([^:;]+)[:;]/)?.[1]?.trim();
+  if (beforeSeparator) return beforeSeparator;
+  if (/^\d/.test(text)) return briefSummary(text);
+  const beforeSentence = text.match(/^([^.]+)\./)?.[1]?.trim();
+  if (beforeSentence) return beforeSentence;
+  return beforeNumber || briefSummary(text);
+}
+
+function isWarmupMovement(workout, exercise) {
+  const name = String(exercise?.name || "").trim().toLowerCase();
+  if (!name) return false;
+  const warmupTitle = instructionTitle(workout?.warmupNotes).toLowerCase();
+  if (warmupTitle && (name === warmupTitle || name.includes(warmupTitle) || warmupTitle.includes(name))) return true;
+  return /\b(activation|warm[ -]?up|mobility|prep)\b/.test(name);
+}
+
+function wodMovementTags(...values) {
+  const text = values.map((value) => String(value || "")).join(" ").toLowerCase();
+  const tags = [];
+  if (/\b(db|dumbbell)\s+snatch(es)?\b/.test(text)) tags.push("DB snatch");
+  if (/\bburpees?\b/.test(text)) tags.push("burpee");
+  return compactUniqueParts(tags);
+}
+
 function workoutBlockSummary(workout, section) {
   if (!workout) return "Not assigned";
-  if (section === "warmup") return briefSummary(workout.warmupNotes) || "Coach warm-up";
+  if (section === "warmup") return instructionTitle(workout.warmupNotes) || "Coach warm-up";
   const sections = section === "wod" ? ["wod", "cardio", "partner"] : [section];
-  const exercises = (workout.exercises || []).filter((exercise) => sections.includes(exercise.section || "cardio"));
+  const exercises = (workout.exercises || [])
+    .filter((exercise) => sections.includes(exercise.section || "cardio"))
+    .filter((exercise) => section !== "lifting" || !isWarmupMovement(workout, exercise));
   if (section === "wod") {
     const primaryExercise = exercises[0] || null;
-    const summary = briefSummary(workout.cardioNotes)
-      || briefSummary(primaryExercise?.notes)
+    const summaryTitle = instructionTitle(workout.cardioNotes)
+      || instructionTitle(primaryExercise?.notes)
       || compactUniqueParts([primaryExercise?.name, primaryExercise?.target]).join(" · ");
+    const tags = wodMovementTags(workout.cardioNotes, primaryExercise?.notes, primaryExercise?.name);
+    const summary = compactUniqueParts([summaryTitle, tags.join(" + ")]).join(" · ");
     return briefSummary(summary) || "No WOD listed";
   }
   const movementNames = compactUniqueParts(exercises.map((exercise) => exercise.name)).slice(0, 2);
