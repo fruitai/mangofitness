@@ -205,7 +205,17 @@ h2 { margin:0 0 10px; font-size:22px; letter-spacing:-.02em; }
   align-items: center;
 }
 .app-shell .brand-heading {
+  gap: 16px;
   min-width: 0;
+}
+.app-shell .brand-mark {
+  width: 175px;
+  height: 82px;
+  border-radius: 20px;
+}
+.app-shell .brand-mark img {
+  width: 158px;
+  height: auto;
 }
 .app-shell h1 {
   min-width: 0;
@@ -529,12 +539,12 @@ button.app-tab:hover {
   }
 
   .app-shell .brand-mark {
-    width: 116px;
-    height: 54px;
-    border-radius: 16px;
+    width: 145px;
+    height: 68px;
+    border-radius: 17px;
   }
   .app-shell .brand-mark img {
-    width: 104px;
+    width: 132px;
   }
   .app-shell h1 {
     font-size: 24px;
@@ -560,6 +570,17 @@ button.app-tab:hover {
     padding: 8px 9px;
     font-size: 12px;
     text-align: center;
+  }
+}
+
+@media (max-width: 760px) {
+  .app-shell .brand-mark {
+    width: 145px;
+    height: 68px;
+    border-radius: 17px;
+  }
+  .app-shell .brand-mark img {
+    width: 132px;
   }
 }
 
@@ -668,12 +689,12 @@ button.app-tab:hover {
   }
 
   .app-shell .brand-mark {
-    width: 116px;
-    height: 54px;
-    border-radius: 16px;
+    width: 145px;
+    height: 68px;
+    border-radius: 17px;
   }
   .app-shell .brand-mark img {
-    width: 104px;
+    width: 132px;
   }
   .app-shell h1 {
     font-size: 24px;
@@ -2018,7 +2039,7 @@ body.is-reordering .exercise-row.dragging {
     letter-spacing: 0;
   }
   .app-shell .brand-heading {
-    gap: 10px;
+    gap: 16px;
   }
   .header-auth .header-sign-out {
     min-height: 32px;
