@@ -3548,15 +3548,37 @@ function firstLine(value) {
   return String(value || "").split(/\r?\n/).map((line) => line.trim()).find(Boolean) || "";
 }
 
+function compactUniqueParts(parts) {
+  const seen = new Set();
+  return parts.map((part) => String(part || "").trim()).filter((part) => {
+    const key = part.toLowerCase();
+    if (!part || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function dailyExerciseSummary(exercise, section) {
+  if (!exercise) return "";
+  const setRepLine = exercise.sets && exercise.reps ? `${exercise.sets} x ${exercise.reps}` : exercise.reps || "";
+  const parts = section === "lifting"
+    ? [exercise.name, setRepLine, exercise.weight, exercise.target, firstLine(exercise.notes)]
+    : [exercise.name, firstLine(exercise.notes), exercise.target, setRepLine];
+  return compactUniqueParts(parts).join(" · ");
+}
+
 function workoutBlockSummary(workout, section) {
   if (!workout) return "Not assigned";
   if (section === "warmup") return workout.warmupNotes ? firstLine(workout.warmupNotes) : "Coach warm-up";
-  const groups = workoutSectionGroups(workout.exercises || []);
-  const group = groups.find((item) => item.section === section) || null;
-  const exercise = group?.exercises?.[0] || null;
-  if (!exercise) return section === "lifting" ? "No strength listed" : "No WOD listed";
-  if (section === "lifting") return [exercise.name, exercise.sets && exercise.reps ? `${exercise.sets} x ${exercise.reps}` : exercise.reps || exercise.target].filter(Boolean).join(" · ");
-  return [exercise.name, exercise.target || workout.cardioNotes && firstLine(workout.cardioNotes)].filter(Boolean).join(" · ");
+  const sections = section === "wod" ? ["wod", "cardio", "partner"] : [section];
+  const exercises = (workout.exercises || []).filter((exercise) => sections.includes(exercise.section || "cardio"));
+  const exerciseSummaries = compactUniqueParts(exercises.map((exercise) => dailyExerciseSummary(exercise, section)));
+  if (section === "wod") {
+    const wodNotes = firstLine(workout.cardioNotes);
+    const summary = compactUniqueParts([wodNotes, ...exerciseSummaries]).join(" · ");
+    return summary || "No WOD listed";
+  }
+  return exerciseSummaries.join(" · ") || "No strength listed";
 }
 
 function renderTodayWorkoutCard(workout, selectedDate, workoutStatus) {
@@ -3574,7 +3596,7 @@ function renderTodayWorkoutCard(workout, selectedDate, workoutStatus) {
     <div class="today-workout-blocks">
       <div class="workout-block"><span>Warm-up</span><strong>${escapeHtml(workoutBlockSummary(workout, "warmup"))}</strong></div>
       <div class="workout-block"><span>Strength</span><strong>${escapeHtml(workoutBlockSummary(workout, "lifting"))}</strong></div>
-      <div class="workout-block"><span>WOD</span><strong>${escapeHtml(workoutBlockSummary(workout, "cardio"))}</strong></div>
+      <div class="workout-block"><span>WOD</span><strong>${escapeHtml(workoutBlockSummary(workout, "wod"))}</strong></div>
     </div>
     <div class="today-workout-actions">
       <button type="button" class="primary" data-today-log-results>Log results</button>
