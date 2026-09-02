@@ -5697,7 +5697,15 @@ function initAthleteLeaderboardApp() {
     return score || (result.weight !== "" && result.weight != null ? `${result.weight} lb` : (result.working_weight !== "" && result.working_weight != null ? `${result.working_weight} lb` : (result.reps || result.reps_completed || "Logged")));
   }
 
-  function renderLeaderboardEvent(eventName, entries, mode) {
+  function isOlderThan24Months(result) {
+    if (!result.completedOn) return false;
+    const cutoff = new Date();
+    cutoff.setHours(0, 0, 0, 0);
+    cutoff.setFullYear(cutoff.getFullYear() - 2);
+    return String(result.completedOn) < cutoff.toISOString().slice(0, 10);
+  }
+
+  function renderLeaderboardEvent(eventName, entries, historicalEntries, mode) {
     const ranked = [...entries].sort((a, b) => {
       const av = scoreValue(a, mode);
       const bv = scoreValue(b, mode);
@@ -5713,7 +5721,7 @@ function initAthleteLeaderboardApp() {
     });
     return `
       <section class="item-card leaderboard-event-card">
-        <div class="item-head"><div><strong>${escapeHtml(eventName)}</strong><p class="muted">${ranked.length} athlete${ranked.length === 1 ? "" : "s"}</p></div><span class="pill">${mode === "lower" ? "Lowest time wins" : "Highest score wins"}</span></div>
+        <div class="item-head"><div><strong>${escapeHtml(eventName)}</strong><p class="muted">Last 24 months · ${ranked.length} athlete${ranked.length === 1 ? "" : "s"}</p></div><span class="pill">${mode === "lower" ? "Lowest time wins" : "Highest score wins"}</span></div>
         <div class="progress-table-wrap">
           <table class="progress-table leaderboard-table">
             <colgroup>
@@ -5724,14 +5732,25 @@ function initAthleteLeaderboardApp() {
             </colgroup>
             <thead><tr><th>Rank</th><th>Athlete</th><th>Best</th><th>Date</th></tr></thead>
             <tbody>
-              ${rankedRows.map(({ result, rank }) => `
+              ${rankedRows.length ? rankedRows.map(({ result, rank }) => `
                 <tr class="${rank === 1 ? "leaderboard-winner" : ""}">
                   <td><strong>#${rank}</strong></td>
                   <td><strong>${escapeHtml(leaderboardAthleteName(result))}</strong><span class="muted leaderboard-mobile-date">${escapeHtml(displayDate(result.completedOn))}</span></td>
                   <td><strong>${escapeHtml(leaderboardDisplayValue(result))}</strong></td>
                   <td>${escapeHtml(displayDate(result.completedOn))}</td>
                 </tr>
-              `).join("")}
+              `).join("") : `<tr><td colspan="4" class="muted leaderboard-empty-recent">No results in the last 24 months.</td></tr>`}
+              ${historicalEntries.length ? `
+                <tr class="leaderboard-history-heading"><td colspan="4">Older PRs · more than 24 months ago</td></tr>
+                ${historicalEntries.map((result) => `
+                  <tr class="leaderboard-historical-row">
+                    <td>PR</td>
+                    <td><span>${escapeHtml(leaderboardAthleteName(result))}</span><span class="muted leaderboard-mobile-date">${escapeHtml(displayDate(result.completedOn))}</span></td>
+                    <td>${escapeHtml(leaderboardDisplayValue(result))}</td>
+                    <td>${escapeHtml(displayDate(result.completedOn))}</td>
+                  </tr>
+                `).join("")}
+              ` : ""}
             </tbody>
           </table>
         </div>
@@ -5758,7 +5777,8 @@ function initAthleteLeaderboardApp() {
       }));
       const term = (search?.value || "").trim().toLowerCase();
       const selectedType = typeFilter?.value || "all";
-      const bestByEventAndAthlete = new Map();
+      const recentBestByEventAndAthlete = new Map();
+      const historicalBestByEventAndAthlete = new Map();
       results.forEach((result) => {
         const event = eventKey(result);
         if (!event) return;
@@ -5766,16 +5786,18 @@ function initAthleteLeaderboardApp() {
         const haystack = [event.name, result.exerciseName, leaderboardAthleteName(result), result.score].join(" ").toLowerCase();
         if (term && !haystack.includes(term)) return;
         const key = `${event.name}::${result.athleteId}`;
-        const current = bestByEventAndAthlete.get(key);
-        if (isBetter(result, current?.result, event.mode)) bestByEventAndAthlete.set(key, { event, result });
+        const target = isOlderThan24Months(result) ? historicalBestByEventAndAthlete : recentBestByEventAndAthlete;
+        const current = target.get(key);
+        if (isBetter(result, current?.result, event.mode)) target.set(key, { event, result });
       });
-      const eventGroups = [...bestByEventAndAthlete.values()].reduce((map, item) => {
-        if (!map.has(item.event.name)) map.set(item.event.name, { event: item.event, results: [] });
-        map.get(item.event.name).results.push(item.result);
+      const eventGroups = [...recentBestByEventAndAthlete.values(), ...historicalBestByEventAndAthlete.values()].reduce((map, item) => {
+        if (!map.has(item.event.name)) map.set(item.event.name, { event: item.event, results: [], historicalResults: [] });
+        const destination = isOlderThan24Months(item.result) ? map.get(item.event.name).historicalResults : map.get(item.event.name).results;
+        destination.push(item.result);
         return map;
       }, new Map());
       const groups = [...eventGroups.values()].sort((a, b) => a.event.name.localeCompare(b.event.name));
-      list.innerHTML = groups.length ? `<div class="list-stack leaderboard-list">${groups.map((group) => renderLeaderboardEvent(group.event.name, group.results, group.event.mode)).join("")}</div>` : `<p class="muted empty-state">No leaderboard results found yet.</p>`;
+      list.innerHTML = groups.length ? `<div class="list-stack leaderboard-list">${groups.map((group) => renderLeaderboardEvent(group.event.name, group.results, group.historicalResults, group.event.mode)).join("")}</div>` : `<p class="muted empty-state">No leaderboard results found yet.</p>`;
     } catch (error) {
       list.innerHTML = `<p class="muted empty-state">${escapeHtml(friendlyError(error))}</p>`;
     }

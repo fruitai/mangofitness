@@ -1409,6 +1409,17 @@ button.app-tab:hover {
   text-align: right;
 }
 .leaderboard-mobile-date { display: none; }
+.leaderboard-history-heading td {
+  background: color-mix(in srgb, var(--soft) 75%, white);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-align: left !important;
+}
+.leaderboard-historical-row { opacity: .58; }
+.leaderboard-historical-row td { font-weight: 400; }
+.leaderboard-empty-recent { text-align: left !important; }
 @media (max-width: 760px) {
   .leaderboard-table {
     font-size: 13px;
