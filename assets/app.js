@@ -5627,6 +5627,9 @@ function initAthleteLeaderboardApp() {
     if (/\b(row 2k|2k row|2000m row|row 2000m)\b/.test(name)) return { type: "row", name: "Row 2K", mode: "lower" };
     if (/\b(row 3k|3k row|3000m row|row 3000m)\b/.test(name)) return { type: "row", name: "3K Row", mode: "lower" };
     if (/\b(row 4k|4k row|4000m row|row 4000m)\b/.test(name)) return { type: "row", name: "4K Row", mode: "lower" };
+    if (/\b(assault bike|air bike)\b/.test(name) && /\b(10[ -]?min(?:ute)?|max cal|calories?)\b/.test(name)) {
+      return { type: "cardio", name: "10-Minute Assault Bike — Max Calories", mode: "higher" };
+    }
     if (/\b(angie|cindy|murph|fran|helen|grace|annie|death by|koko|wall ball|burpee|air ?squat)\b/.test(name)) {
       const lowerIsBetter = /\b(angie|murph|fran|helen|grace|annie|koko|wall ball)\b/.test(name) || String(result.score || "").includes(":");
       return { type: "wod", name: result.exerciseName || result.event_name || "CrossFit WOD", mode: lowerIsBetter ? "lower" : "higher" };
