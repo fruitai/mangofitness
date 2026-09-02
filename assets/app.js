@@ -5630,6 +5630,10 @@ function initAthleteLeaderboardApp() {
     if (/\b(assault bike|air bike)\b/.test(name) && /\b(10[ -]?min(?:ute)?|max cal|calories?)\b/.test(name)) {
       return { type: "cardio", name: "10-Minute Assault Bike — Max Calories", mode: "higher" };
     }
+    if (/\b(cadence|fitnessgram)\b/.test(name) && /\bpush[ -]?ups?\b/.test(name)) {
+      return { type: "gymnastics", name: "Standard Cadence Push-Up — Max Reps", mode: "higher" };
+    }
+    if (/\b24[. -]?1\b/.test(name)) return { type: "wod", name: "24.1", mode: "lower" };
     if (/\b(angie|cindy|murph|fran|helen|grace|annie|death by|koko|wall ball|burpee|air ?squat)\b/.test(name)) {
       const lowerIsBetter = /\b(angie|murph|fran|helen|grace|annie|koko|wall ball)\b/.test(name) || String(result.score || "").includes(":");
       return { type: "wod", name: result.exerciseName || result.event_name || "CrossFit WOD", mode: lowerIsBetter ? "lower" : "higher" };
