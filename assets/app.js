@@ -5678,7 +5678,16 @@ function initAthleteLeaderboardApp() {
   }
 
   function leaderboardDisplayValue(result) {
-    return result.score || result.score_result || (result.weight !== "" && result.weight != null ? `${result.weight} lb` : (result.working_weight !== "" && result.working_weight != null ? `${result.working_weight} lb` : (result.reps || result.reps_completed || "Logged")));
+    const score = result.score || result.score_result;
+    if (score && String(result.exerciseName || "").trim().toLowerCase() === "cindy") {
+      const rounds = String(score).match(/(\d+(?:\.\d+)?)\s*rounds?/i);
+      const extraReps = String(score).match(/\+\s*(\d+(?:\.\d+)?)\s*(?:reps?)?/i);
+      if (rounds) {
+        const roundCount = Number(rounds[1]);
+        return `${rounds[1]} round${roundCount === 1 ? "" : "s"}${extraReps ? ` + ${extraReps[1]} reps` : ""}`;
+      }
+    }
+    return score || (result.weight !== "" && result.weight != null ? `${result.weight} lb` : (result.working_weight !== "" && result.working_weight != null ? `${result.working_weight} lb` : (result.reps || result.reps_completed || "Logged")));
   }
 
   function renderLeaderboardEvent(eventName, entries, mode) {
