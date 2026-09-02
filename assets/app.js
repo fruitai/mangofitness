@@ -5720,7 +5720,7 @@ function initAthleteLeaderboardApp() {
               ${rankedRows.map(({ result, rank }) => `
                 <tr class="${rank === 1 ? "leaderboard-winner" : ""}">
                   <td><strong>#${rank}</strong></td>
-                  <td>${escapeHtml(leaderboardAthleteName(result))}</td>
+                  <td><strong>${escapeHtml(leaderboardAthleteName(result))}</strong><span class="muted leaderboard-mobile-date">${escapeHtml(displayDate(result.completedOn))}</span></td>
                   <td><strong>${escapeHtml(leaderboardDisplayValue(result))}</strong></td>
                   <td>${escapeHtml(displayDate(result.completedOn))}</td>
                 </tr>
