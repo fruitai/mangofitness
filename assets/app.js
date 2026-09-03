@@ -5792,7 +5792,9 @@ function initAthleteLeaderboardApp() {
         id: row.result_id,
         athleteId: row.athlete_id,
         athlete_name: row.athlete_name,
-        exerciseName: normalizedExerciseName({ movement_key: row.movement_key }, row.event_name),
+        exerciseName: (/^(test )?hang$/i.test(String(row.event_name || "").trim()) || row.movement_key === "hang")
+          ? "Dead Hang: Max Time"
+          : row.event_name,
         completedOn: isPlaceholderDate(row.completed_on) ? "" : row.completed_on,
         score: row.score_result,
         weight: row.working_weight,
