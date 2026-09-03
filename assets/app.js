@@ -5620,6 +5620,9 @@ function initAthleteLeaderboardApp() {
   const list = document.getElementById("athleteLeaderboardList");
   const search = document.getElementById("leaderboardSearch");
   const typeFilter = document.getElementById("leaderboardTypeFilter");
+  const featuredEvents = [
+    { type: "gymnastics", name: "Cadence Push-Up — Max Reps", mode: "higher" }
+  ];
   if (!list) return;
 
   function eventKey(result) {
@@ -5796,6 +5799,11 @@ function initAthleteLeaderboardApp() {
         destination.push(item.result);
         return map;
       }, new Map());
+      featuredEvents.forEach((event) => {
+        if (selectedType !== "all" && event.type !== selectedType) return;
+        if (term && !event.name.toLowerCase().includes(term)) return;
+        if (!eventGroups.has(event.name)) eventGroups.set(event.name, { event, results: [], historicalResults: [] });
+      });
       const groups = [...eventGroups.values()].sort((a, b) => a.event.name.localeCompare(b.event.name));
       list.innerHTML = groups.length ? `<div class="list-stack leaderboard-list">${groups.map((group) => renderLeaderboardEvent(group.event.name, group.results, group.historicalResults, group.event.mode)).join("")}</div>` : `<p class="muted empty-state">No leaderboard results found yet.</p>`;
     } catch (error) {
