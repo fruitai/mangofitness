@@ -9,28 +9,32 @@ begin
   update public.strength_movements
   set name = 'Dead Hang: Max Time',
       updated_at = now()
-  where lower(btrim(name)) = 'test hang';
+  where movement_key = 'hang'
+     or lower(btrim(name)) in ('hang', 'test hang');
 
   update public.cardio_benchmarks
   set name = 'Dead Hang: Max Time',
       updated_at = now()
-  where lower(btrim(name)) = 'test hang';
+  where benchmark_key = 'hang'
+     or lower(btrim(name)) in ('hang', 'test hang');
 
   update public.workout_exercises
   set exercise_name = case
-        when lower(btrim(exercise_name)) = 'test hang' then 'Dead Hang: Max Time'
+        when lower(btrim(exercise_name)) in ('hang', 'test hang') then 'Dead Hang: Max Time'
         else exercise_name
       end,
       benchmark_name = case
-        when lower(btrim(coalesce(benchmark_name, ''))) = 'test hang' then 'Dead Hang: Max Time'
+        when lower(btrim(coalesce(benchmark_name, ''))) in ('hang', 'test hang') then 'Dead Hang: Max Time'
         else benchmark_name
       end,
       movement_name = case
-        when lower(btrim(coalesce(movement_name, ''))) = 'test hang' then 'Dead Hang: Max Time'
+        when lower(btrim(coalesce(movement_name, ''))) in ('hang', 'test hang') then 'Dead Hang: Max Time'
         else movement_name
       end
-  where lower(btrim(exercise_name)) = 'test hang'
-     or lower(btrim(coalesce(benchmark_name, ''))) = 'test hang'
-     or lower(btrim(coalesce(movement_name, ''))) = 'test hang';
+  where movement_key = 'hang'
+     or benchmark_key = 'hang'
+     or lower(btrim(exercise_name)) in ('hang', 'test hang')
+     or lower(btrim(coalesce(benchmark_name, ''))) in ('hang', 'test hang')
+     or lower(btrim(coalesce(movement_name, ''))) in ('hang', 'test hang');
 end
 $migration$;

@@ -26,7 +26,8 @@ const MangoFitnessStore = (() => {
   function normalizedExerciseName(exercise, fallback) {
     const name = exercise.exercise_name || exercise.exerciseName || "Exercise";
     const benchmarkKey = exercise.benchmark_key || exercise.benchmarkKey || "";
-    if (/^test hang$/i.test(String(fallback || name).trim())) {
+    const movementKey = exercise.movement_key || exercise.movementKey || "";
+    if (/^(test )?hang$/i.test(String(fallback || name).trim()) || movementKey === "hang") {
       return "Dead Hang: Max Time";
     }
     if (benchmarkKey === "push-up-max-reps") {
@@ -5791,7 +5792,7 @@ function initAthleteLeaderboardApp() {
         id: row.result_id,
         athleteId: row.athlete_id,
         athlete_name: row.athlete_name,
-        exerciseName: row.event_name,
+        exerciseName: normalizedExerciseName({ movement_key: row.movement_key }, row.event_name),
         completedOn: isPlaceholderDate(row.completed_on) ? "" : row.completed_on,
         score: row.score_result,
         weight: row.working_weight,
