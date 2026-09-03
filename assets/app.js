@@ -5778,9 +5778,10 @@ function initAthleteLeaderboardApp() {
     try {
       const sb = MangoFitnessStore.client();
       if (!sb?.rpc) throw new Error("Leaderboard unavailable until Supabase is ready.");
-      const [{ data, error }, athleteResults] = await Promise.all([
+      const [{ data, error }, athleteResults, athletes] = await Promise.all([
         sb.rpc("leaderboard_results"),
-        MangoFitnessStore.results()
+        MangoFitnessStore.results(),
+        MangoFitnessStore.athletes()
       ]);
       if (error) throw error;
       const leaderboardResults = (data || []).map((row) => ({
@@ -5796,12 +5797,13 @@ function initAthleteLeaderboardApp() {
         eventType: row.event_type || ""
       }));
       const includedResultIds = new Set(leaderboardResults.map((result) => result.id).filter(Boolean));
+      const athleteNameById = new Map((athletes || []).map((athlete) => [athlete.id, athlete.name]));
       const ownMissingResults = (athleteResults || [])
         .filter((result) => !includedResultIds.has(result.id))
         .filter((result) => ["Push-Up Max Rep", "Push-Up Cadence Max Rep"].includes(eventKey(result)?.name))
         .map((result) => ({
           ...result,
-          athlete_name: "You",
+          athlete_name: athleteNameById.get(result.athleteId) || "Athlete",
           eventType: ""
         }));
       const results = [...leaderboardResults, ...ownMissingResults];
