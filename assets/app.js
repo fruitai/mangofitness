@@ -5765,9 +5765,13 @@ function initAthleteLeaderboardApp() {
     try {
       const sb = MangoFitnessStore.client();
       if (!sb?.rpc) throw new Error("Leaderboard unavailable until Supabase is ready.");
-      const { data, error } = await sb.rpc("leaderboard_results");
+      const [{ data, error }, athleteResults] = await Promise.all([
+        sb.rpc("leaderboard_results"),
+        MangoFitnessStore.results()
+      ]);
       if (error) throw error;
-      const results = (data || []).map((row) => ({
+      const leaderboardResults = (data || []).map((row) => ({
+        id: row.result_id,
         athleteId: row.athlete_id,
         athlete_name: row.athlete_name,
         exerciseName: row.event_name,
@@ -5778,6 +5782,16 @@ function initAthleteLeaderboardApp() {
         notes: row.notes || "",
         eventType: row.event_type || ""
       }));
+      const includedResultIds = new Set(leaderboardResults.map((result) => result.id).filter(Boolean));
+      const ownMissingResults = (athleteResults || [])
+        .filter((result) => !includedResultIds.has(result.id))
+        .filter((result) => eventKey(result)?.name === "Cadence Push-Up — Max Reps")
+        .map((result) => ({
+          ...result,
+          athlete_name: "You",
+          eventType: ""
+        }));
+      const results = [...leaderboardResults, ...ownMissingResults];
       const term = (search?.value || "").trim().toLowerCase();
       const selectedType = typeFilter?.value || "all";
       const recentBestByEventAndAthlete = new Map();
