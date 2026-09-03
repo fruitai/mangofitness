@@ -5806,7 +5806,8 @@ function initAthleteLeaderboardApp() {
           athlete_name: athleteNameById.get(result.athleteId) || "Athlete",
           eventType: ""
         }));
-      const results = [...leaderboardResults, ...ownMissingResults];
+      const results = [...leaderboardResults, ...ownMissingResults]
+        .filter((result) => result.completedOn && !isPlaceholderDate(result.completedOn));
       const term = (search?.value || "").trim().toLowerCase();
       const selectedType = typeFilter?.value || "all";
       const recentBestByEventAndAthlete = new Map();

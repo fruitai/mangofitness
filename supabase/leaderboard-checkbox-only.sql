@@ -43,6 +43,7 @@ as $$
   where
     awr.score_result is not null
     and btrim(awr.score_result) <> ''
+    and awr.completed_on is not null
     and coalesce(sm.show_on_leaderboard, false);
 $$;
 
