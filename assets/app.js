@@ -26,6 +26,9 @@ const MangoFitnessStore = (() => {
   function normalizedExerciseName(exercise, fallback) {
     const name = exercise.exercise_name || exercise.exerciseName || "Exercise";
     const benchmarkKey = exercise.benchmark_key || exercise.benchmarkKey || "";
+    if (/^test hang$/i.test(String(fallback || name).trim())) {
+      return "Dead Hang: Max Time";
+    }
     if (benchmarkKey === "push-up-max-reps") {
       return /\b(cadence|fitnessgram)\b/i.test(name) ? "Push-Up Cadence Max Rep" : "Push-Up Max Rep";
     }
