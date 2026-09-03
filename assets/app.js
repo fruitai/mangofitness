@@ -23,6 +23,15 @@ const MangoFitnessStore = (() => {
     return (value || "").replace(/\\n/g, "\n");
   }
 
+  function normalizedExerciseName(exercise, fallback) {
+    const name = exercise.exercise_name || exercise.exerciseName || "Exercise";
+    const benchmarkKey = exercise.benchmark_key || exercise.benchmarkKey || "";
+    if (benchmarkKey === "push-up-max-reps" && /\b(cadence|fitnessgram)\b/i.test(name)) {
+      return "Cadence Push-Up Tester — Max Reps";
+    }
+    return fallback || name;
+  }
+
   function normalizeWorkout(row) {
     return {
       id: row.id,
@@ -41,7 +50,7 @@ const MangoFitnessStore = (() => {
       assignedAthleteNames: (row.workout_assignments || []).map((assignment) => assignment.athletes?.name).filter(Boolean),
       exercises: (row.workout_exercises || []).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)).map((exercise) => ({
         id: exercise.id,
-        name: exercise.exercise_name,
+        name: normalizedExerciseName(exercise, exercise.exercise_name),
         sets: exercise.sets || "",
         reps: exercise.reps || "",
         target: exercise.target || "",
@@ -64,7 +73,7 @@ const MangoFitnessStore = (() => {
       workoutId: exercise.workout_id || "",
       athleteId: row.athlete_id || "",
       exerciseId: row.workout_exercise_id,
-      exerciseName: exercise.benchmark_name || exercise.movement_name || exercise.exercise_name || "Exercise",
+      exerciseName: normalizedExerciseName(exercise, exercise.benchmark_name || exercise.movement_name || exercise.exercise_name),
       benchmarkKey: exercise.benchmark_key || "",
       benchmarkName: exercise.benchmark_name || "",
       movementKey: exercise.movement_key || "",
