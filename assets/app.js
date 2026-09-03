@@ -26,8 +26,8 @@ const MangoFitnessStore = (() => {
   function normalizedExerciseName(exercise, fallback) {
     const name = exercise.exercise_name || exercise.exerciseName || "Exercise";
     const benchmarkKey = exercise.benchmark_key || exercise.benchmarkKey || "";
-    if (benchmarkKey === "push-up-max-reps" && /\b(cadence|fitnessgram)\b/i.test(name)) {
-      return "Cadence Push-Up Tester — Max Reps";
+    if (benchmarkKey === "push-up-max-reps") {
+      return /\b(cadence|fitnessgram)\b/i.test(name) ? "Push-Up Cadence Max Rep" : "Push-Up Max Rep";
     }
     return fallback || name;
   }
@@ -5630,7 +5630,8 @@ function initAthleteLeaderboardApp() {
   const search = document.getElementById("leaderboardSearch");
   const typeFilter = document.getElementById("leaderboardTypeFilter");
   const featuredEvents = [
-    { type: "gymnastics", name: "Cadence Push-Up — Max Reps", mode: "higher" }
+    { type: "gymnastics", name: "Push-Up Max Rep", mode: "higher" },
+    { type: "gymnastics", name: "Push-Up Cadence Max Rep", mode: "higher" }
   ];
   if (!list) return;
 
@@ -5643,7 +5644,10 @@ function initAthleteLeaderboardApp() {
       return { type: "cardio", name: "10-Minute Assault Bike — Max Calories", mode: "higher" };
     }
     if (/\b(cadence|fitnessgram)\b/.test(name) && /\bpush[ -]?ups?\b/.test(name)) {
-      return { type: "gymnastics", name: "Cadence Push-Up — Max Reps", mode: "higher" };
+      return { type: "gymnastics", name: "Push-Up Cadence Max Rep", mode: "higher" };
+    }
+    if (/\bpush[ -]?ups?\b/.test(name) && /\bmax(?:imum)?\b/.test(name) && /\breps?\b/.test(name)) {
+      return { type: "gymnastics", name: "Push-Up Max Rep", mode: "higher" };
     }
     if (/\b24[. -]?1\b/.test(name)) return { type: "wod", name: "24.1", mode: "lower" };
     if (/\b(angie|cindy|murph|fran|helen|grace|annie|death by|koko|wall ball|burpee|air ?squat)\b/.test(name)) {
@@ -5794,7 +5798,7 @@ function initAthleteLeaderboardApp() {
       const includedResultIds = new Set(leaderboardResults.map((result) => result.id).filter(Boolean));
       const ownMissingResults = (athleteResults || [])
         .filter((result) => !includedResultIds.has(result.id))
-        .filter((result) => eventKey(result)?.name === "Cadence Push-Up — Max Reps")
+        .filter((result) => ["Push-Up Max Rep", "Push-Up Cadence Max Rep"].includes(eventKey(result)?.name))
         .map((result) => ({
           ...result,
           athlete_name: "You",
