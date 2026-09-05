@@ -42,6 +42,11 @@ function normalizeExerciseDisplayName(value) {
   const name = String(value || "").trim();
   if (/^24\.1(?:[- ]style)?[- ]tester$/i.test(name)) return "24.1 Tester";
   const lookupName = name.toLowerCase().replace(/,/g, "").replace(/\bdumbell\b/g, "dumbbell").replace(/\s+/g, " ");
+  const dumbbellSnatch = lookupName.match(/^(?:(?:dumbbell|db) snatch|snatch (?:dumbbell|db))(?:\s+(\d+\s*rm))?$/);
+  if (dumbbellSnatch) return `Snatch Dumbbell${dumbbellSnatch[1] ? ` ${dumbbellSnatch[1].replace(/\s+/g, "").toUpperCase()}` : ""}`;
+  if (/^(?:(?:dumbbell|db) squat clean(?: technique)?|squat clean (?:dumbbell|db)(?: technique)?|squat clean technique (?:dumbbell|db))$/.test(lookupName)) {
+    return "Squat Clean Dumbbell";
+  }
   if (/^(?:800\s*(?:m|meters?)[ -]+run|run[ -]+800\s*(?:m|meters?))$/.test(lookupName)) return "Run 800m";
   if (/^(?:barbell romanian deadlift|romanian barbell deadlift|romanian deadlift(?: barbell)?|barbell rdl|rdl(?: barbell)?|deadlift (?:barbell )?(?:romanian|rdl))$/.test(lookupName)) {
     return "Deadlift Barbell RDL";
