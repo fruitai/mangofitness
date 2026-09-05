@@ -41,6 +41,8 @@ assert.equal(normalizeName("Back Squat"), "Back Squat");
 assert.equal(normalizeName("Squat Back"), "Back Squat");
 assert.equal(normalizeName("Front Squat"), "Front Squat");
 assert.equal(normalizeName("Squat Front"), "Front Squat");
+assert.equal(normalizeName("Push Press"), "Shoulder Push Press");
+assert.equal(normalizeName("Shoulder Push Press"), "Shoulder Push Press");
 assert.equal(normalizeName("Hex Bar Deadlift"), "Deadlift Hex Bar");
 assert.equal(normalizeName("Hex-Bar Deadlift"), "Deadlift Hex Bar");
 assert.equal(normalizeName("Deadlift Hex Bar"), "Deadlift Hex Bar");
