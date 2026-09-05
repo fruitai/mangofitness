@@ -45,7 +45,7 @@ const exerciseDisplayNameAliases = new Map([
 function normalizeExerciseDisplayName(value) {
   const name = String(value || "").trim();
   if (/^24\.1(?:[- ]style)?[- ]tester$/i.test(name)) return "24.1 Tester";
-  const lookupName = name.toLowerCase().replace(/,/g, "").replace(/\bdumbell\b/g, "dumbbell").replace(/\s+/g, " ");
+  const lookupName = name.toLowerCase().replace(/,/g, "").replace(/\bdumbell\b/g, "dumbbell").replace(/\bromainian\b/g, "romanian").replace(/\s+/g, " ");
   const assaultBikeShortMaxCal = lookupName.match(/^(?:assault|air) bike (1|2:30|3|5)(?:[ -]?min(?:ute)?s?)?(?:[ -]+max(?:imum)?[ -]+cal(?:orie)?s?)?$/);
   if (assaultBikeShortMaxCal) {
     const duration = assaultBikeShortMaxCal[1];
@@ -57,6 +57,9 @@ function normalizeExerciseDisplayName(value) {
     return "Squat Clean Dumbbell";
   }
   if (/^(?:800\s*(?:m|meters?)[ -]+run|run[ -]+800\s*(?:m|meters?))$/.test(lookupName)) return "Run 800m";
+  if (/^(?:heavy )?(?:(?:dumbbell|db) romanian deadlift|romanian (?:dumbbell|db) deadlift|romanian deadlift (?:dumbbell|db)|(?:dumbbell|db) rdl|rdl (?:dumbbell|db)|deadlift (?:dumbbell|db) (?:romanian|rdl))$/.test(lookupName)) {
+    return "Deadlift Dumbbell RDL";
+  }
   if (/^(?:barbell romanian deadlift|romanian barbell deadlift|romanian deadlift(?: barbell)?|barbell rdl|rdl(?: barbell)?|deadlift (?:barbell )?(?:romanian|rdl))$/.test(lookupName)) {
     return "Deadlift Barbell RDL";
   }
