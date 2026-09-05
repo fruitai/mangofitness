@@ -1,3 +1,8 @@
+function normalize24Point1TesterName(value) {
+  const name = String(value || "").trim();
+  return /^24\.1(?:[- ]style)?[- ]tester$/i.test(name) ? "24.1 Tester" : name;
+}
+
 const MangoFitnessStore = (() => {
   const localWorkoutKey = "mangoFitness.workouts.v1";
   const localResultKey = "mangoFitness.results.v1";
@@ -33,7 +38,10 @@ const MangoFitnessStore = (() => {
     if (benchmarkKey === "push-up-max-reps") {
       return /\b(cadence|fitnessgram)\b/i.test(name) ? "Push-Up Cadence Max Rep" : "Push-Up Max Rep";
     }
-    return fallback || name;
+    const displayName = normalize24Point1TesterName(fallback || name);
+    return displayName === "24.1 Tester" || normalize24Point1TesterName(name) === "24.1 Tester"
+      ? "24.1 Tester"
+      : displayName;
   }
 
   function normalizeWorkout(row) {
