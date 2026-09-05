@@ -9,6 +9,8 @@ const exerciseDisplayNameAliases = new Map([
   ["shoulder push press", "Shoulder Push Press"],
   ["bodyweight wod", "300 Rep Challenge"],
   ["body weight wod", "300 Rep Challenge"],
+  ["cindy wod", "Cindy"],
+  ["cindy", "Cindy"],
   ["hex bar deadlift", "Deadlift Hex Bar"],
   ["hex-bar deadlift", "Deadlift Hex Bar"],
   ["deadlift hex bar", "Deadlift Hex Bar"],
@@ -5786,6 +5788,7 @@ function initAthleteLeaderboardApp() {
   function eventKey(result) {
     const name = String(result.exerciseName || result.event_name || "").toLowerCase();
     if (is300RepChallenge(name)) return { type: "wod", name: "300 Rep Challenge", mode: "lower" };
+    if (/\bcindy\b/.test(name)) return { type: "wod", name: "Cindy", mode: "higher" };
     if (/\b(row 1k|1k row|1000 ?m row|row 1000 ?m)\b/.test(name)) return { type: "row", name: "Row 1K", mode: "lower" };
     if (/\b(row 2k|2k row|2000m row|row 2000m)\b/.test(name)) return { type: "row", name: "Row 2K", mode: "lower" };
     if (/\b(row 3k|3k row|3000m row|row 3000m)\b/.test(name)) return { type: "row", name: "Row 3K", mode: "lower" };
@@ -5801,7 +5804,7 @@ function initAthleteLeaderboardApp() {
       return { type: "gymnastics", name: "Push-Up Max Rep", mode: "higher" };
     }
     if (/\b24[. -]?1\b/.test(name)) return { type: "wod", name: "24.1", mode: "lower" };
-    if (/\b(angie|cindy|murph|fran|helen|grace|annie|death by|koko|wall ball|burpee|air ?squat)\b/.test(name)) {
+    if (/\b(angie|murph|fran|helen|grace|annie|death by|koko|wall ball|burpee|air ?squat)\b/.test(name)) {
       const lowerIsBetter = /\b(angie|murph|fran|helen|grace|annie|koko|wall ball)\b/.test(name) || String(result.score || "").includes(":");
       return { type: "wod", name: result.exerciseName || result.event_name || "CrossFit WOD", mode: lowerIsBetter ? "lower" : "higher" };
     }
