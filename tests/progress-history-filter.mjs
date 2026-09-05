@@ -25,5 +25,19 @@ assert.equal(normalizeName("24.1-Style 21-15-9 Intervals"), "24.1-Style 21-15-9 
 assert.equal(normalizeName("Side Lunge"), "Lateral Lunge");
 assert.equal(normalizeName("side-lunge"), "Lateral Lunge");
 assert.equal(normalizeName("Reverse Lunge"), "Reverse Lunge");
+assert.equal(normalizeName("Dumbbell Bench Press"), "Bench Press Dumbbell");
+assert.equal(normalizeName("Dumbell Bench Press"), "Bench Press Dumbbell");
+assert.equal(normalizeName("DB Bench Press"), "Bench Press Dumbbell");
+assert.equal(normalizeName("Incline DB Bench Press"), "Bench Press Incline Dumbbell");
+assert.equal(normalizeName("Close-Grip Bench Press"), "Bench Press Close Grip");
+assert.equal(normalizeName("Back Squat"), "Squat Back");
+assert.equal(normalizeName("Romanian Deadlift"), "Deadlift Romanian");
+assert.equal(normalizeName("Dumbbell Row"), "Row Dumbbell");
+assert.equal(normalizeName("Ring Row"), "Row Ring");
+assert.equal(normalizeName("Dumbbell Snatch"), "Snatch Dumbbell");
+assert.equal(normalizeName("Seated Shoulder Press"), "Shoulder Press Seated");
+assert.equal(normalizeName("4K Row"), "Row 4K");
+assert.equal(normalizeName("Incline Chest Press"), "Incline Chest Press");
+assert.equal(normalizeName("Hang Power Clean"), "Hang Power Clean");
 
 console.log("progress history filter checks passed");

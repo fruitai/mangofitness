@@ -1,8 +1,43 @@
+const exerciseDisplayNameAliases = new Map([
+  ["side lunge", "Lateral Lunge"],
+  ["side-lunge", "Lateral Lunge"],
+  ["back squat", "Squat Back"],
+  ["front squat", "Squat Front"],
+  ["dumbbell bench press", "Bench Press Dumbbell"],
+  ["db bench press", "Bench Press Dumbbell"],
+  ["bench press db", "Bench Press Dumbbell"],
+  ["incline bench press", "Bench Press Incline"],
+  ["incline dumbbell bench press", "Bench Press Incline Dumbbell"],
+  ["incline db bench press", "Bench Press Incline Dumbbell"],
+  ["dumbbell incline bench press", "Bench Press Incline Dumbbell"],
+  ["db incline bench press", "Bench Press Incline Dumbbell"],
+  ["close-grip bench press", "Bench Press Close Grip"],
+  ["close grip bench press", "Bench Press Close Grip"],
+  ["decline bench press", "Bench Press Decline"],
+  ["romanian deadlift", "Deadlift Romanian"],
+  ["rdl", "Deadlift Romanian"],
+  ["dumbbell row", "Row Dumbbell"],
+  ["db row", "Row Dumbbell"],
+  ["ring row", "Row Ring"],
+  ["dumbbell clean", "Clean Dumbbell"],
+  ["db clean", "Clean Dumbbell"],
+  ["dumbbell snatch", "Snatch Dumbbell"],
+  ["db snatch", "Snatch Dumbbell"],
+  ["dumbbell thruster", "Thruster Dumbbell"],
+  ["db thruster", "Thruster Dumbbell"],
+  ["dumbbell lunge", "Lunge Dumbbell"],
+  ["db lunge", "Lunge Dumbbell"],
+  ["front dumbbell lunge", "Lunge Front Dumbbell"],
+  ["front db lunge", "Lunge Front Dumbbell"],
+  ["seated shoulder press", "Shoulder Press Seated"],
+  ["4k row", "Row 4K"]
+]);
+
 function normalizeExerciseDisplayName(value) {
   const name = String(value || "").trim();
   if (/^24\.1(?:[- ]style)?[- ]tester$/i.test(name)) return "24.1 Tester";
-  if (/^side[- ]lunge$/i.test(name)) return "Lateral Lunge";
-  return name;
+  const lookupName = name.toLowerCase().replace(/\bdumbell\b/g, "dumbbell").replace(/\s+/g, " ");
+  return exerciseDisplayNameAliases.get(lookupName) || name;
 }
 
 const MangoFitnessStore = (() => {
@@ -260,7 +295,9 @@ const MangoFitnessStore = (() => {
 
     async strengthMovements() {
       const sb = client();
-      if (!sb) return readLocal(localStrengthMovementKey);
+      if (!sb) return readLocal(localStrengthMovementKey)
+        .map((movement) => ({ ...movement, name: normalizeExerciseDisplayName(movement.name) }))
+        .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
 
       const { data, error } = await sb
         .from("strength_movements")
@@ -269,9 +306,10 @@ const MangoFitnessStore = (() => {
       if (error) throw error;
       return (data || []).map((movement) => ({
         ...movement,
+        name: normalizeExerciseDisplayName(movement.name),
         showOnLeaderboard: Boolean(movement.show_on_leaderboard),
         isBenchmark: Boolean(movement.is_benchmark)
-      }));
+      })).sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
     },
 
     async saveStrengthMovement(movement) {
@@ -831,8 +869,8 @@ function warmupTemplateByKey(key) {
 
 const defaultStrengthMovements = [
   { key: "", name: "Select movement" },
-  { key: "back-squat", name: "Back Squat" },
-  { key: "front-squat", name: "Front Squat" },
+  { key: "back-squat", name: "Squat Back" },
+  { key: "front-squat", name: "Squat Front" },
   { key: "deadlift", name: "Deadlift" },
   { key: "bench-press", name: "Bench Press" },
   { key: "incline-db-chest-press", name: "Incline DB Chest Press" },
@@ -844,7 +882,7 @@ const defaultStrengthMovements = [
   { key: "squat-snatch", name: "Squat Snatch" },
   { key: "clean-and-jerk", name: "Clean & Jerk" },
   { key: "pull-up", name: "Pull-up" },
-  { key: "ring-row", name: "Ring Row" },
+  { key: "ring-row", name: "Row Ring" },
   { key: "push-up", name: "Push-up" },
   { key: "kettlebell-swing", name: "Kettlebell Swing" },
   { key: "custom", name: "Custom / one-off" }
