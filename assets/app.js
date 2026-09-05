@@ -4759,6 +4759,17 @@ async function loadAthleteOptionsForSelect(select, emptyLabel = "Select athlete"
   }
 }
 
+function includeResultInProgressHistory(result) {
+  const identity = [result?.exerciseName, result?.benchmarkName, result?.movementName]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  if (!/\b24(?:\.|[-\s])1\b/.test(identity)) return true;
+  const isTester = /\btester\b/.test(identity);
+  const isTrainingVariant = /\b(primer|baseline|emom|intervals?)\b/.test(identity);
+  return isTester && !isTrainingVariant;
+}
+
 function initAthleteHistoryApp(options = {}) {
   const mode = options.mode || "athlete";
   const coachMode = mode === "coach";
@@ -5177,9 +5188,10 @@ function initAthleteHistoryApp(options = {}) {
       const allResults = await MangoFitnessStore.results();
       const selectedAthleteId = coachMode ? (profileSelect?.value || "") : await currentAthleteId();
       const term = (search?.value || "").trim().toLowerCase();
-      const baseResults = coachMode
+      const scopedResults = coachMode
         ? (selectedAthleteId ? allResults.filter((result) => result.athleteId === selectedAthleteId) : allResults)
         : allResults.filter((result) => result.athleteId === selectedAthleteId);
+      const baseResults = scopedResults.filter(includeResultInProgressHistory);
       updateProgressFilterOptions(baseResults);
       const selectedType = typeFilter?.value || "all";
       const selectedCategory = categoryFilter?.value || "all";
