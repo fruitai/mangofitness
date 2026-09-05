@@ -45,7 +45,9 @@ const exerciseDisplayNameAliases = new Map([
 function normalizeExerciseDisplayName(value) {
   const name = String(value || "").trim();
   if (/^24\.1(?:[- ]style)?[- ]tester$/i.test(name)) return "24.1 Tester";
-  const lookupName = name.toLowerCase().replace(/\bdumbell\b/g, "dumbbell").replace(/\s+/g, " ");
+  const lookupName = name.toLowerCase().replace(/,/g, "").replace(/\bdumbell\b/g, "dumbbell").replace(/\s+/g, " ");
+  if (/^(?:row\s+(?:1000|1k)\s*(?:m|meters?)?|(?:1000|1k)\s*(?:m|meters?)?\s+row)$/.test(lookupName)) return "Row 1K";
+  if (/^(?:row\s+(?:5000|5k)\s*(?:m|meters?)?|(?:5000|5k)\s*(?:m|meters?)?\s+row)$/.test(lookupName)) return "Row 5K";
   return exerciseDisplayNameAliases.get(lookupName) || name;
 }
 
@@ -5713,9 +5715,11 @@ function initAthleteLeaderboardApp() {
 
   function eventKey(result) {
     const name = String(result.exerciseName || result.event_name || "").toLowerCase();
+    if (/\b(row 1k|1k row|1000 ?m row|row 1000 ?m)\b/.test(name)) return { type: "row", name: "Row 1K", mode: "lower" };
     if (/\b(row 2k|2k row|2000m row|row 2000m)\b/.test(name)) return { type: "row", name: "Row 2K", mode: "lower" };
     if (/\b(row 3k|3k row|3000m row|row 3000m)\b/.test(name)) return { type: "row", name: "Row 3K", mode: "lower" };
     if (/\b(row 4k|4k row|4000m row|row 4000m)\b/.test(name)) return { type: "row", name: "Row 4K", mode: "lower" };
+    if (/\b(row 5k|5k row|5000 ?m row|row 5000 ?m)\b/.test(name)) return { type: "row", name: "Row 5K", mode: "lower" };
     if (/\b(assault bike|air bike)\b/.test(name) && /\b(10[ -]?min(?:ute)?|max cal|calories?)\b/.test(name)) {
       return { type: "cardio", name: "10-Minute Assault Bike — Max Calories", mode: "higher" };
     }
