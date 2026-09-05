@@ -56,6 +56,10 @@ assert.equal(normalizeName("1 Mile Run"), "Run 1 Mile");
 assert.equal(normalizeName("1-Mile Run"), "Run 1 Mile");
 assert.equal(normalizeName("Run 1 Mile"), "Run 1 Mile");
 assert.equal(normalizeName("5K Run"), "Run 5K");
+assert.equal(normalizeName("10-Minute Assault Bike — Max Calories"), "Assault Bike 10 Min Max Cal");
+assert.equal(normalizeName("Assault Bike 10 Min Max Calories"), "Assault Bike 10 Min Max Cal");
+assert.equal(normalizeName("Air Bike 10-Minute Maximum Calories"), "Assault Bike 10 Min Max Cal");
+assert.equal(normalizeName("Assault Bike Calories"), "Assault Bike Calories");
 assert.equal(normalizeName("Incline Chest Press"), "Incline Chest Press");
 assert.equal(normalizeName("Hang Power Clean"), "Hang Power Clean");
 assert.deepEqual(

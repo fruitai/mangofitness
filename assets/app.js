@@ -48,6 +48,9 @@ function normalizeExerciseDisplayName(value) {
   const lookupName = name.toLowerCase().replace(/,/g, "").replace(/\bdumbell\b/g, "dumbbell").replace(/\s+/g, " ");
   if (/^(?:row\s+(?:1000|1k)\s*(?:m|meters?)?|(?:1000|1k)\s*(?:m|meters?)?\s+row)$/.test(lookupName)) return "Row 1K";
   if (/^(?:row\s+(?:5000|5k)\s*(?:m|meters?)?|(?:5000|5k)\s*(?:m|meters?)?\s+row)$/.test(lookupName)) return "Row 5K";
+  if (/\b(?:assault|air) bike\b/.test(lookupName) && /\b10[ -]?min(?:ute)?s?\b/.test(lookupName) && /\bmax(?:imum)?\b/.test(lookupName) && /\bcal(?:orie)?s?\b/.test(lookupName)) {
+    return "Assault Bike 10 Min Max Cal";
+  }
   return exerciseDisplayNameAliases.get(lookupName) || name;
 }
 
@@ -5724,8 +5727,8 @@ function initAthleteLeaderboardApp() {
     if (/\b(row 3k|3k row|3000m row|row 3000m)\b/.test(name)) return { type: "row", name: "Row 3K", mode: "lower" };
     if (/\b(row 4k|4k row|4000m row|row 4000m)\b/.test(name)) return { type: "row", name: "Row 4K", mode: "lower" };
     if (/\b(row 5k|5k row|5000 ?m row|row 5000 ?m)\b/.test(name)) return { type: "row", name: "Row 5K", mode: "lower" };
-    if (/\b(assault bike|air bike)\b/.test(name) && /\b(10[ -]?min(?:ute)?|max cal|calories?)\b/.test(name)) {
-      return { type: "cardio", name: "10-Minute Assault Bike — Max Calories", mode: "higher" };
+    if (/\b(assault bike|air bike)\b/.test(name) && /\b10[ -]?min(?:ute)?s?\b/.test(name) && /\bmax(?:imum)?\b/.test(name) && /\bcal(?:orie)?s?\b/.test(name)) {
+      return { type: "cardio", name: "Assault Bike 10 Min Max Cal", mode: "higher" };
     }
     if (/\b(cadence|fitnessgram)\b/.test(name) && /\bpush[ -]?ups?\b/.test(name)) {
       return { type: "gymnastics", name: "Push-Up Cadence Max Rep", mode: "higher" };
