@@ -3,8 +3,8 @@
 
 update public.strength_movements
 set name = case movement_key
-  when 'back-squat' then 'Squat Back'
-  when 'front-squat' then 'Squat Front'
+  when 'back-squat' then 'Back Squat'
+  when 'front-squat' then 'Front Squat'
   when 'dumbbell-bench-press' then 'Bench Press Dumbbell'
   when 'incline-chest-press' then 'Chest Press Incline'
   when 'incline-db-chest-press' then 'Chest Press Incline Dumbbell'

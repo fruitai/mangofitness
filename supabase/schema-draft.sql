@@ -221,8 +221,8 @@ on conflict (benchmark_key) do nothing;
 
 insert into strength_movements (movement_key, name, is_builtin)
 values
-  ('back-squat', 'Squat Back', true),
-  ('front-squat', 'Squat Front', true),
+  ('back-squat', 'Back Squat', true),
+  ('front-squat', 'Front Squat', true),
   ('deadlift', 'Deadlift', true),
   ('bench-press', 'Bench Press', true),
   ('incline-db-chest-press', 'Chest Press Incline Dumbbell', true),

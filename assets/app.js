@@ -1,8 +1,10 @@
 const exerciseDisplayNameAliases = new Map([
   ["side lunge", "Lateral Lunge"],
   ["side-lunge", "Lateral Lunge"],
-  ["back squat", "Squat Back"],
-  ["front squat", "Squat Front"],
+  ["back squat", "Back Squat"],
+  ["squat back", "Back Squat"],
+  ["front squat", "Front Squat"],
+  ["squat front", "Front Squat"],
   ["dumbbell bench press", "Bench Press Dumbbell"],
   ["db bench press", "Bench Press Dumbbell"],
   ["bench press db", "Bench Press Dumbbell"],
@@ -869,8 +871,8 @@ function warmupTemplateByKey(key) {
 
 const defaultStrengthMovements = [
   { key: "", name: "Select movement" },
-  { key: "back-squat", name: "Squat Back" },
-  { key: "front-squat", name: "Squat Front" },
+  { key: "back-squat", name: "Back Squat" },
+  { key: "front-squat", name: "Front Squat" },
   { key: "deadlift", name: "Deadlift" },
   { key: "bench-press", name: "Bench Press" },
   { key: "incline-db-chest-press", name: "Incline DB Chest Press" },
