@@ -11,7 +11,7 @@ set name = case movement_key
   when 'incline-dumbbell-press' then 'Chest Press Incline Dumbbell'
   when 'incline-close-grip-press' then 'Chest Press Incline Close Grip'
   when 'seated-shoulder-press' then 'Shoulder Press Seated'
-  when 'romanian-deadlift' then 'Deadlift Romanian'
+  when 'romanian-deadlift' then 'Deadlift RDL'
   when 'dumbbell-row' then 'Row Dumbbell'
   when 'ring-row' then 'Row Ring'
   when 'dumbbell-clean' then 'Clean Dumbbell'

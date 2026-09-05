@@ -234,7 +234,7 @@ values
   ('squat-snatch', 'Squat Snatch', true),
   ('clean-and-jerk', 'Clean & Jerk', true),
   ('pull-up', 'Pull-up', true),
-  ('ring-row', 'Ring Row', true),
+  ('ring-row', 'Row Ring', true),
   ('push-up', 'Push-up', true),
   ('kettlebell-swing', 'Kettlebell Swing', true)
 on conflict (movement_key) do nothing;
