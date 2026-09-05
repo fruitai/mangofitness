@@ -42,6 +42,7 @@ function normalizeExerciseDisplayName(value) {
   const name = String(value || "").trim();
   if (/^24\.1(?:[- ]style)?[- ]tester$/i.test(name)) return "24.1 Tester";
   const lookupName = name.toLowerCase().replace(/,/g, "").replace(/\bdumbell\b/g, "dumbbell").replace(/\s+/g, " ");
+  if (/^(?:800\s*(?:m|meters?)[ -]+run|run[ -]+800\s*(?:m|meters?))$/.test(lookupName)) return "Run 800m";
   if (/^(?:barbell romanian deadlift|romanian barbell deadlift|romanian deadlift(?: barbell)?|barbell rdl|rdl(?: barbell)?|deadlift (?:barbell )?(?:romanian|rdl))$/.test(lookupName)) {
     return "Deadlift Barbell RDL";
   }
@@ -3288,7 +3289,7 @@ function exerciseMovementToken(exercise) {
   return String(exercise?.movementKey || exercise?.movementName || exercise?.benchmarkKey || exercise?.benchmarkName || exercise?.name || "").trim().toLowerCase();
 }
 
-const trackHistoryTokens = new Set(["track run", "track run intervals", "1-mile-run", "1 mile run", "run 1 mile", "800m-run", "800m run"]);
+const trackHistoryTokens = new Set(["track run", "track run intervals", "1-mile-run", "1 mile run", "run 1 mile", "800m-run", "800m run", "run 800m"]);
 
 function isTrackHistoryExercise(exercise) {
   return trackHistoryTokens.has(exerciseMovementToken(exercise)) || String(exercise?.name || "").trim().toLowerCase().startsWith("track run");
