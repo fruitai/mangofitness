@@ -84,6 +84,7 @@ function normalizeExerciseDisplayName(value) {
   const powerCleanBarbell = lookupName.match(/^(?:barbell power clean|power clean barbell|power clean)(?:\s+(\d+\s*rm))?$/);
   if (powerCleanBarbell) return `Power Clean Barbell${powerCleanBarbell[1] ? ` ${powerCleanBarbell[1].replace(/\s+/g, "").toUpperCase()}` : ""}`;
   if (/^(?:row\s+(?:1000|1k)\s*(?:m|meters?)?|(?:1000|1k)\s*(?:m|meters?)?\s+row)$/.test(lookupName)) return "Row 1K";
+  if (/^(?:row\s+(?:2000|2k)\s*(?:m|meters?)?|(?:2000|2k)\s*(?:m|meters?)?\s+row)$/.test(lookupName)) return "Row 2K";
   if (/^(?:row\s+(?:5000|5k)\s*(?:m|meters?)?|(?:5000|5k)\s*(?:m|meters?)?\s+row)$/.test(lookupName)) return "Row 5K";
   if (/\b(?:assault|air) bike\b/.test(lookupName) && /\b10[ -]?min(?:ute)?s?\b/.test(lookupName) && /\bmax(?:imum)?\b/.test(lookupName) && /\bcal(?:orie)?s?\b/.test(lookupName)) {
     return "Assault Bike 10 Min Max Cal";
