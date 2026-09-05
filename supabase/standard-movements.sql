@@ -15,7 +15,7 @@ values
   ('walking-lunge', 'Walking Lunge', 'Alternating forward lunges while traveling.', 'strength', true, false),
   ('reverse-lunge', 'Reverse Lunge', 'Alternating lunges stepping backward.', 'strength', true, false),
   ('front-rack-lunge', 'Front Rack Lunge', 'Lunge with barbell or dumbbells in front rack.', 'strength', true, false),
-  ('romanian-deadlift', 'Deadlift RDL', 'Hip-hinge deadlift variation emphasizing hamstrings.', 'strength', true, false),
+  ('romanian-deadlift', 'Deadlift Barbell RDL', 'Hip-hinge deadlift variation emphasizing hamstrings.', 'strength', true, false),
   ('good-morning', 'Good Morning', 'Hip hinge with barbell on back.', 'strength', true, false),
   ('hip-thrust', 'Hip Thrust', 'Glute bridge/hip extension loaded from the hips.', 'strength', true, false),
   ('glute-bridge', 'Glute Bridge', 'Supine hip extension movement.', 'strength', true, false),

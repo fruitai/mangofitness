@@ -16,10 +16,6 @@ const exerciseDisplayNameAliases = new Map([
   ["close-grip bench press", "Bench Press Close Grip"],
   ["close grip bench press", "Bench Press Close Grip"],
   ["decline bench press", "Bench Press Decline"],
-  ["romanian deadlift", "Deadlift RDL"],
-  ["deadlift romanian", "Deadlift RDL"],
-  ["rdl", "Deadlift RDL"],
-  ["deadlift rdl", "Deadlift RDL"],
   ["dumbbell row", "Row Dumbbell"],
   ["db row", "Row Dumbbell"],
   ["ring row", "Row Ring"],
@@ -46,6 +42,15 @@ function normalizeExerciseDisplayName(value) {
   const name = String(value || "").trim();
   if (/^24\.1(?:[- ]style)?[- ]tester$/i.test(name)) return "24.1 Tester";
   const lookupName = name.toLowerCase().replace(/,/g, "").replace(/\bdumbell\b/g, "dumbbell").replace(/\s+/g, " ");
+  if (/^(?:barbell romanian deadlift|romanian barbell deadlift|romanian deadlift(?: barbell)?|barbell rdl|rdl(?: barbell)?|deadlift (?:barbell )?(?:romanian|rdl))$/.test(lookupName)) {
+    return "Deadlift Barbell RDL";
+  }
+  const benchPressBarbell = lookupName.match(/^(?:barbell bench press|bench press barbell|bench press)(?:\s+(\d+\s*rm))?$/);
+  if (benchPressBarbell) return `Bench Press Barbell${benchPressBarbell[1] ? ` ${benchPressBarbell[1].replace(/\s+/g, "").toUpperCase()}` : ""}`;
+  const deadliftBarbell = lookupName.match(/^(?:barbell deadlift|deadlift barbell|deadlift)(?:\s+(\d+\s*rm))?$/);
+  if (deadliftBarbell) return `Deadlift Barbell${deadliftBarbell[1] ? ` ${deadliftBarbell[1].replace(/\s+/g, "").toUpperCase()}` : ""}`;
+  const powerCleanBarbell = lookupName.match(/^(?:barbell power clean|power clean barbell|power clean)(?:\s+(\d+\s*rm))?$/);
+  if (powerCleanBarbell) return `Power Clean Barbell${powerCleanBarbell[1] ? ` ${powerCleanBarbell[1].replace(/\s+/g, "").toUpperCase()}` : ""}`;
   if (/^(?:row\s+(?:1000|1k)\s*(?:m|meters?)?|(?:1000|1k)\s*(?:m|meters?)?\s+row)$/.test(lookupName)) return "Row 1K";
   if (/^(?:row\s+(?:5000|5k)\s*(?:m|meters?)?|(?:5000|5k)\s*(?:m|meters?)?\s+row)$/.test(lookupName)) return "Row 5K";
   if (/\b(?:assault|air) bike\b/.test(lookupName) && /\b10[ -]?min(?:ute)?s?\b/.test(lookupName) && /\bmax(?:imum)?\b/.test(lookupName) && /\bcal(?:orie)?s?\b/.test(lookupName)) {
@@ -893,12 +898,12 @@ const defaultStrengthMovements = [
   { key: "", name: "Select movement" },
   { key: "back-squat", name: "Back Squat" },
   { key: "front-squat", name: "Front Squat" },
-  { key: "deadlift", name: "Deadlift" },
-  { key: "bench-press", name: "Bench Press" },
+  { key: "deadlift", name: "Deadlift Barbell" },
+  { key: "bench-press", name: "Bench Press Barbell" },
   { key: "incline-db-chest-press", name: "Incline DB Chest Press" },
   { key: "strict-press", name: "Strict Press" },
   { key: "push-press", name: "Push Press" },
-  { key: "power-clean", name: "Power Clean" },
+  { key: "power-clean", name: "Power Clean Barbell" },
   { key: "squat-clean", name: "Squat Clean" },
   { key: "power-snatch", name: "Power Snatch" },
   { key: "squat-snatch", name: "Squat Snatch" },

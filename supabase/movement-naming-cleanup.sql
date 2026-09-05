@@ -5,13 +5,16 @@ update public.strength_movements
 set name = case movement_key
   when 'back-squat' then 'Back Squat'
   when 'front-squat' then 'Front Squat'
+  when 'bench-press' then 'Bench Press Barbell'
+  when 'deadlift' then 'Deadlift Barbell'
+  when 'power-clean' then 'Power Clean Barbell'
   when 'dumbbell-bench-press' then 'Bench Press Dumbbell'
   when 'incline-chest-press' then 'Chest Press Incline'
   when 'incline-db-chest-press' then 'Chest Press Incline Dumbbell'
   when 'incline-dumbbell-press' then 'Chest Press Incline Dumbbell'
   when 'incline-close-grip-press' then 'Chest Press Incline Close Grip'
   when 'seated-shoulder-press' then 'Shoulder Press Seated'
-  when 'romanian-deadlift' then 'Deadlift RDL'
+  when 'romanian-deadlift' then 'Deadlift Barbell RDL'
   when 'dumbbell-row' then 'Row Dumbbell'
   when 'ring-row' then 'Row Ring'
   when 'dumbbell-clean' then 'Clean Dumbbell'
@@ -24,6 +27,9 @@ end
 where movement_key in (
   'back-squat',
   'front-squat',
+  'bench-press',
+  'deadlift',
+  'power-clean',
   'dumbbell-bench-press',
   'incline-chest-press',
   'incline-db-chest-press',
