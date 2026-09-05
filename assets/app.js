@@ -32,7 +32,12 @@ const exerciseDisplayNameAliases = new Map([
   ["front dumbbell lunge", "Lunge Front Dumbbell"],
   ["front db lunge", "Lunge Front Dumbbell"],
   ["seated shoulder press", "Shoulder Press Seated"],
-  ["4k row", "Row 4K"]
+  ["4k row", "Row 4K"],
+  ["1 mile run", "Run 1 Mile"],
+  ["1-mile run", "Run 1 Mile"],
+  ["run 1 mile", "Run 1 Mile"],
+  ["run 1-mile", "Run 1 Mile"],
+  ["5k run", "Run 5K"]
 ]);
 
 function normalizeExerciseDisplayName(value) {
@@ -239,14 +244,18 @@ const MangoFitnessStore = (() => {
 
     async cardioBenchmarks() {
       const sb = client();
-      if (!sb) return readLocal(localCardioBenchmarkKey);
+      if (!sb) return readLocal(localCardioBenchmarkKey)
+        .map((benchmark) => ({ ...benchmark, name: normalizeExerciseDisplayName(benchmark.name) }))
+        .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
 
       const { data, error } = await sb
         .from("cardio_benchmarks")
         .select("id, benchmark_key, name, score_type, description")
         .order("name", { ascending: true });
       if (error) throw error;
-      return data || [];
+      return (data || [])
+        .map((benchmark) => ({ ...benchmark, name: normalizeExerciseDisplayName(benchmark.name) }))
+        .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
     },
 
     async saveCardioBenchmark(benchmark) {
@@ -927,10 +936,10 @@ function strengthMovementByName(name) {
 
 const defaultCardioBenchmarks = [
   { key: "", name: "Select benchmark" },
-  { key: "4k-row", name: "4K Row", scoreType: "Time", description: "For time: row 4,000 meters. Record finish time." },
+  { key: "4k-row", name: "Row 4K", scoreType: "Time", description: "For time: row 4,000 meters. Record finish time." },
   { key: "2k-row", name: "Row 2K", scoreType: "Time", description: "For time: row 2,000 meters. Record finish time." },
-  { key: "1-mile-run", name: "1 Mile Run", scoreType: "Time" },
-  { key: "5k-run", name: "5K Run", scoreType: "Time" },
+  { key: "1-mile-run", name: "Run 1 Mile", scoreType: "Time" },
+  { key: "5k-run", name: "Run 5K", scoreType: "Time" },
   { key: "assault-bike-calories", name: "Assault Bike Calories", scoreType: "Calories" },
   { key: "ski-erg-calories", name: "SkiErg Calories", scoreType: "Calories" },
   { key: "cindy", name: "Cindy", scoreType: "Rounds + reps", description: "20 min AMRAP: 5 pull-ups, 10 push-ups, 15 air squats." },
@@ -3263,7 +3272,7 @@ function exerciseMovementToken(exercise) {
   return String(exercise?.movementKey || exercise?.movementName || exercise?.benchmarkKey || exercise?.benchmarkName || exercise?.name || "").trim().toLowerCase();
 }
 
-const trackHistoryTokens = new Set(["track run", "track run intervals", "1-mile-run", "1 mile run", "800m-run", "800m run"]);
+const trackHistoryTokens = new Set(["track run", "track run intervals", "1-mile-run", "1 mile run", "run 1 mile", "800m-run", "800m run"]);
 
 function isTrackHistoryExercise(exercise) {
   return trackHistoryTokens.has(exerciseMovementToken(exercise)) || String(exercise?.name || "").trim().toLowerCase().startsWith("track run");
@@ -5703,8 +5712,8 @@ function initAthleteLeaderboardApp() {
   function eventKey(result) {
     const name = String(result.exerciseName || result.event_name || "").toLowerCase();
     if (/\b(row 2k|2k row|2000m row|row 2000m)\b/.test(name)) return { type: "row", name: "Row 2K", mode: "lower" };
-    if (/\b(row 3k|3k row|3000m row|row 3000m)\b/.test(name)) return { type: "row", name: "3K Row", mode: "lower" };
-    if (/\b(row 4k|4k row|4000m row|row 4000m)\b/.test(name)) return { type: "row", name: "4K Row", mode: "lower" };
+    if (/\b(row 3k|3k row|3000m row|row 3000m)\b/.test(name)) return { type: "row", name: "Row 3K", mode: "lower" };
+    if (/\b(row 4k|4k row|4000m row|row 4000m)\b/.test(name)) return { type: "row", name: "Row 4K", mode: "lower" };
     if (/\b(assault bike|air bike)\b/.test(name) && /\b(10[ -]?min(?:ute)?|max cal|calories?)\b/.test(name)) {
       return { type: "cardio", name: "10-Minute Assault Bike — Max Calories", mode: "higher" };
     }
@@ -5855,7 +5864,7 @@ function initAthleteLeaderboardApp() {
         athlete_name: row.athlete_name,
         exerciseName: (/^(test )?hang$/i.test(String(row.event_name || "").trim()) || row.movement_key === "hang")
           ? "Dead Hang: Max Time"
-          : row.event_name,
+          : normalizeExerciseDisplayName(row.event_name),
         completedOn: isPlaceholderDate(row.completed_on) ? "" : row.completed_on,
         score: row.score_result,
         weight: row.working_weight,

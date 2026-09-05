@@ -204,10 +204,10 @@ alter table warmup_templates add column if not exists is_builtin boolean not nul
 
 insert into cardio_benchmarks (benchmark_key, name, score_type, description, is_builtin)
 values
-  ('4k-row', '4K Row', 'Time', 'For time: row 4,000 meters. Record finish time.', true),
+  ('4k-row', 'Row 4K', 'Time', 'For time: row 4,000 meters. Record finish time.', true),
   ('2k-row', 'Row 2K', 'Time', 'For time: row 2,000 meters. Record finish time.', true),
-  ('1-mile-run', '1 Mile Run', 'Time', null, true),
-  ('5k-run', '5K Run', 'Time', null, true),
+  ('1-mile-run', 'Run 1 Mile', 'Time', null, true),
+  ('5k-run', 'Run 5K', 'Time', null, true),
   ('assault-bike-calories', 'Assault Bike Calories', 'Calories', null, true),
   ('ski-erg-calories', 'SkiErg Calories', 'Calories', null, true),
   ('cindy', 'Cindy', 'Rounds + reps', '20 min AMRAP: 5 pull-ups, 10 push-ups, 15 air squats.', true),

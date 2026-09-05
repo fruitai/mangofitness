@@ -40,6 +40,10 @@ assert.equal(normalizeName("Ring Row"), "Row Ring");
 assert.equal(normalizeName("Dumbbell Snatch"), "Snatch Dumbbell");
 assert.equal(normalizeName("Seated Shoulder Press"), "Shoulder Press Seated");
 assert.equal(normalizeName("4K Row"), "Row 4K");
+assert.equal(normalizeName("1 Mile Run"), "Run 1 Mile");
+assert.equal(normalizeName("1-Mile Run"), "Run 1 Mile");
+assert.equal(normalizeName("Run 1 Mile"), "Run 1 Mile");
+assert.equal(normalizeName("5K Run"), "Run 5K");
 assert.equal(normalizeName("Incline Chest Press"), "Incline Chest Press");
 assert.equal(normalizeName("Hang Power Clean"), "Hang Power Clean");
 
