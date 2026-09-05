@@ -98,6 +98,10 @@ function compareExerciseDisplayNames(a, b) {
   return String(a || "").localeCompare(String(b || ""), undefined, { numeric: true, sensitivity: "base" });
 }
 
+function is300RepChallenge(value) {
+  return /\b(?:body ?weight wod|300 rep challenge)\b/i.test(String(value || ""));
+}
+
 const MangoFitnessStore = (() => {
   const localWorkoutKey = "mangoFitness.workouts.v1";
   const localResultKey = "mangoFitness.results.v1";
@@ -5078,7 +5082,7 @@ function initAthleteHistoryApp(options = {}) {
 
   function progressGroupLabel(result) {
     const text = [result.exerciseName, result.benchmarkName, result.movementName, result.notes].join(" ").toLowerCase();
-    if (/\b(angie|cindy|murph|fran|helen|grace|death by|koko|wall ball|air ?squat|burpee|wod|amrap)\b/.test(text)) return "WODs";
+    if (is300RepChallenge(text) || /\b(angie|cindy|murph|fran|helen|grace|death by|koko|wall ball|air ?squat|burpee|wod|amrap)\b/.test(text)) return "WODs";
     if (/\b(row|ski|assault bike|\bab\b|run|mile|double under|\bdu\b|vo2|heart rate)\b/.test(text)) return "Cardio";
     if (/\b(back squat|front squat|overhead squat|oh squat|sumo squat)\b/.test(text)) return "Squats";
     if (/\b(clean|snatch|jerk|thruster|deadlift|bench|press|push press|barbell|\bbb\b)\b/.test(text)) return "Barbell / Olympic Lifts";
@@ -5762,6 +5766,7 @@ function initAthleteLeaderboardApp() {
 
   function eventKey(result) {
     const name = String(result.exerciseName || result.event_name || "").toLowerCase();
+    if (is300RepChallenge(name)) return { type: "wod", name: "300 Rep Challenge", mode: "lower" };
     if (/\b(row 1k|1k row|1000 ?m row|row 1000 ?m)\b/.test(name)) return { type: "row", name: "Row 1K", mode: "lower" };
     if (/\b(row 2k|2k row|2000m row|row 2000m)\b/.test(name)) return { type: "row", name: "Row 2K", mode: "lower" };
     if (/\b(row 3k|3k row|3000m row|row 3000m)\b/.test(name)) return { type: "row", name: "Row 3K", mode: "lower" };
