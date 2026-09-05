@@ -107,6 +107,16 @@ function isWodCategoryName(value) {
   return is300RepChallenge(name) || /\bhyrox\b/i.test(name) || /\b24[. -]?1\b/i.test(name);
 }
 
+function isTimeScore(value) {
+  return /^\d+:\d{2}(?::\d{2})?$/.test(String(value || "").trim());
+}
+
+function timeScoreForChallengeResult(result) {
+  return [result?.score, result?.score_result, result?.reps, result?.reps_completed]
+    .map((value) => String(value || "").trim())
+    .find(isTimeScore) || "";
+}
+
 const MangoFitnessStore = (() => {
   const localWorkoutKey = "mangoFitness.workouts.v1";
   const localResultKey = "mangoFitness.results.v1";
@@ -182,22 +192,24 @@ const MangoFitnessStore = (() => {
 
   function normalizeResult(row) {
     const exercise = row.workout_exercises || {};
+    const exerciseName = normalizedExerciseName(exercise, exercise.benchmark_name || exercise.movement_name || exercise.exercise_name);
+    const timedChallenge = is300RepChallenge(exerciseName);
     return {
       id: row.id,
       createdAt: row.created_at || "",
       workoutId: exercise.workout_id || "",
       athleteId: row.athlete_id || "",
       exerciseId: row.workout_exercise_id,
-      exerciseName: normalizedExerciseName(exercise, exercise.benchmark_name || exercise.movement_name || exercise.exercise_name),
+      exerciseName,
       benchmarkKey: exercise.benchmark_key || "",
       benchmarkName: exercise.benchmark_name || "",
       movementKey: exercise.movement_key || "",
       movementName: exercise.movement_name || "",
       completedOn: isPlaceholderDate(row.completed_on) ? "" : row.completed_on,
       weight: row.working_weight ?? "",
-      reps: row.reps_completed || "",
+      reps: timedChallenge ? "" : (row.reps_completed || ""),
       notes: row.notes || "",
-      score: row.score_result || "",
+      score: timedChallenge ? timeScoreForChallengeResult(row) : (row.score_result || ""),
       setNumber: row.set_number || null,
       isPr: Boolean(row.is_pr)
     };
@@ -3587,7 +3599,8 @@ function renderSetLogRow(setNumber, exercise, suggestion = null, logged = null) 
 
 function renderSetLogFields(exercise, athleteResults = [], selectedDate = "") {
   const loggedRows = exerciseLoggedResults(exercise, athleteResults, selectedDate);
-  const isStrength = (exercise.section || "cardio") === "lifting";
+  const isTimedChallenge = is300RepChallenge([exercise.name, exercise.benchmarkName, exercise.movementName].join(" "));
+  const isStrength = (exercise.section || "cardio") === "lifting" && !isTimedChallenge;
   if (!isStrength) {
     if (isSplitCardioExercise(exercise)) {
       const loggedBySet = new Map(loggedRows.map((result) => [Number(result.setNumber || 1), result]));
@@ -3619,7 +3632,7 @@ function renderSetLogFields(exercise, athleteResults = [], selectedDate = "") {
       `;
     }
     const logged = loggedRows[0] || null;
-    const scoreLabel = exercise.target || benchmarkScoreType(benchmarkByKey(exercise.benchmarkKey || "")) || "Score";
+    const scoreLabel = isTimedChallenge ? "Time" : (exercise.target || benchmarkScoreType(benchmarkByKey(exercise.benchmarkKey || "")) || "Score");
     const placeholder = /round/i.test(scoreLabel) ? "7+12" : /time/i.test(scoreLabel) ? "18:42" : scoreLabel;
     return `
       <div class="field cardio-score-field">
@@ -5016,7 +5029,7 @@ function initAthleteHistoryApp(options = {}) {
   }
 
   function resultType(result) {
-    if (result.score) return "score";
+    if (result.score || is300RepChallenge(result.exerciseName)) return "score";
     if (result.weight !== "" && result.weight != null) return "strength";
     return "result";
   }
@@ -5035,6 +5048,7 @@ function initAthleteHistoryApp(options = {}) {
   }
 
   function progressDisplayValue(result) {
+    if (is300RepChallenge(result.exerciseName)) return timeScoreForChallengeResult(result) || "Time not logged";
     return result.score || (result.weight !== "" && result.weight != null ? `${result.weight} lb` : (result.reps || "Logged"));
   }
 
@@ -5812,8 +5826,12 @@ function initAthleteLeaderboardApp() {
   }
 
   function scoreValue(result, mode) {
-    const score = String(result.score || "").toLowerCase();
+    const timedChallenge = is300RepChallenge(result.exerciseName || result.event_name);
+    const score = String(timedChallenge ? timeScoreForChallengeResult(result) : (result.score || "")).toLowerCase();
     const seconds = scoreSeconds(score);
+    if (timedChallenge) {
+      return seconds == null ? Number.POSITIVE_INFINITY : seconds;
+    }
     if (seconds != null) return seconds;
     const rounds = score.match(/(\d+(?:\.\d+)?)\s*round/);
     const reps = score.match(/\+\s*(\d+(?:\.\d+)?)/) || score.match(/(\d+(?:\.\d+)?)\s*rep/);
@@ -5839,6 +5857,7 @@ function initAthleteLeaderboardApp() {
 
   function leaderboardDisplayValue(result) {
     const score = result.score || result.score_result;
+    if (is300RepChallenge(result.exerciseName || result.event_name)) return timeScoreForChallengeResult(result) || "Time not logged";
     if (score && String(result.exerciseName || "").trim().toLowerCase() === "cindy") {
       const rounds = String(score).match(/(\d+(?:\.\d+)?)\s*rounds?/i);
       const extraReps = String(score).match(/\+\s*(\d+(?:\.\d+)?)\s*(?:reps?)?/i);
