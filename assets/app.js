@@ -1,6 +1,8 @@
-function normalize24Point1TesterName(value) {
+function normalizeExerciseDisplayName(value) {
   const name = String(value || "").trim();
-  return /^24\.1(?:[- ]style)?[- ]tester$/i.test(name) ? "24.1 Tester" : name;
+  if (/^24\.1(?:[- ]style)?[- ]tester$/i.test(name)) return "24.1 Tester";
+  if (/^side[- ]lunge$/i.test(name)) return "Lateral Lunge";
+  return name;
 }
 
 const MangoFitnessStore = (() => {
@@ -38,10 +40,9 @@ const MangoFitnessStore = (() => {
     if (benchmarkKey === "push-up-max-reps") {
       return /\b(cadence|fitnessgram)\b/i.test(name) ? "Push-Up Cadence Max Rep" : "Push-Up Max Rep";
     }
-    const displayName = normalize24Point1TesterName(fallback || name);
-    return displayName === "24.1 Tester" || normalize24Point1TesterName(name) === "24.1 Tester"
-      ? "24.1 Tester"
-      : displayName;
+    const displayName = normalizeExerciseDisplayName(fallback || name);
+    const originalName = normalizeExerciseDisplayName(name);
+    return originalName !== String(name).trim() ? originalName : displayName;
   }
 
   function normalizeWorkout(row) {

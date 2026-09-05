@@ -7,10 +7,10 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const source = fs.readFileSync(path.join(root, "assets/app.js"), "utf8");
 const sandbox = { window: {}, localStorage: { getItem: () => null, setItem: () => {} } };
-vm.runInNewContext(`${source}\nthis.__includeResultInProgressHistory = includeResultInProgressHistory; this.__normalize24Point1TesterName = normalize24Point1TesterName;`, sandbox);
+vm.runInNewContext(`${source}\nthis.__includeResultInProgressHistory = includeResultInProgressHistory; this.__normalizeExerciseDisplayName = normalizeExerciseDisplayName;`, sandbox);
 
 const include = sandbox.__includeResultInProgressHistory;
-const normalizeName = sandbox.__normalize24Point1TesterName;
+const normalizeName = sandbox.__normalizeExerciseDisplayName;
 assert.equal(include({ exerciseName: "10-12 Min 24.1 Primer" }), false);
 assert.equal(include({ exerciseName: "12 Min 24.1 Movement Baseline" }), false);
 assert.equal(include({ exerciseName: "15 Min 24.1 EMOM" }), false);
@@ -22,5 +22,8 @@ assert.equal(normalizeName("24.1-Style Tester"), "24.1 Tester");
 assert.equal(normalizeName("24.1 Style Tester"), "24.1 Tester");
 assert.equal(normalizeName("24.1 Tester"), "24.1 Tester");
 assert.equal(normalizeName("24.1-Style 21-15-9 Intervals"), "24.1-Style 21-15-9 Intervals");
+assert.equal(normalizeName("Side Lunge"), "Lateral Lunge");
+assert.equal(normalizeName("side-lunge"), "Lateral Lunge");
+assert.equal(normalizeName("Reverse Lunge"), "Reverse Lunge");
 
 console.log("progress history filter checks passed");
