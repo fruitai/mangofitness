@@ -51,6 +51,10 @@ function normalizeExerciseDisplayName(value) {
   return exerciseDisplayNameAliases.get(lookupName) || name;
 }
 
+function compareExerciseDisplayNames(a, b) {
+  return String(a || "").localeCompare(String(b || ""), undefined, { numeric: true, sensitivity: "base" });
+}
+
 const MangoFitnessStore = (() => {
   const localWorkoutKey = "mangoFitness.workouts.v1";
   const localResultKey = "mangoFitness.results.v1";
@@ -250,7 +254,7 @@ const MangoFitnessStore = (() => {
       const sb = client();
       if (!sb) return readLocal(localCardioBenchmarkKey)
         .map((benchmark) => ({ ...benchmark, name: normalizeExerciseDisplayName(benchmark.name) }))
-        .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
+        .sort((a, b) => compareExerciseDisplayNames(a.name, b.name));
 
       const { data, error } = await sb
         .from("cardio_benchmarks")
@@ -259,7 +263,7 @@ const MangoFitnessStore = (() => {
       if (error) throw error;
       return (data || [])
         .map((benchmark) => ({ ...benchmark, name: normalizeExerciseDisplayName(benchmark.name) }))
-        .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
+        .sort((a, b) => compareExerciseDisplayNames(a.name, b.name));
     },
 
     async saveCardioBenchmark(benchmark) {
@@ -268,7 +272,7 @@ const MangoFitnessStore = (() => {
         const benchmarks = readLocal(localCardioBenchmarkKey);
         const saved = { ...benchmark, id: uid("cardio-benchmark") };
         benchmarks.push(saved);
-        writeLocal(localCardioBenchmarkKey, benchmarks.sort((a, b) => a.name.localeCompare(b.name)));
+        writeLocal(localCardioBenchmarkKey, benchmarks.sort((a, b) => compareExerciseDisplayNames(a.name, b.name)));
         return saved;
       }
       const user = await requireUser();
@@ -285,7 +289,7 @@ const MangoFitnessStore = (() => {
       const sb = client();
       if (!sb) {
         const benchmarks = readLocal(localCardioBenchmarkKey).map((item) => item.id === id ? { ...item, ...benchmark } : item);
-        writeLocal(localCardioBenchmarkKey, benchmarks.sort((a, b) => a.name.localeCompare(b.name)));
+        writeLocal(localCardioBenchmarkKey, benchmarks.sort((a, b) => compareExerciseDisplayNames(a.name, b.name)));
         return { id, ...benchmark };
       }
       const { data, error } = await sb
@@ -312,7 +316,7 @@ const MangoFitnessStore = (() => {
       const sb = client();
       if (!sb) return readLocal(localStrengthMovementKey)
         .map((movement) => ({ ...movement, name: normalizeExerciseDisplayName(movement.name) }))
-        .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
+        .sort((a, b) => compareExerciseDisplayNames(a.name, b.name));
 
       const { data, error } = await sb
         .from("strength_movements")
@@ -324,7 +328,7 @@ const MangoFitnessStore = (() => {
         name: normalizeExerciseDisplayName(movement.name),
         showOnLeaderboard: Boolean(movement.show_on_leaderboard),
         isBenchmark: Boolean(movement.is_benchmark)
-      })).sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
+      })).sort((a, b) => compareExerciseDisplayNames(a.name, b.name));
     },
 
     async saveStrengthMovement(movement) {
@@ -333,7 +337,7 @@ const MangoFitnessStore = (() => {
         const movements = readLocal(localStrengthMovementKey);
         const saved = { ...movement, id: uid("strength-movement"), movement_key: movement.key || slugify(movement.name) };
         movements.push(saved);
-        writeLocal(localStrengthMovementKey, movements.sort((a, b) => a.name.localeCompare(b.name)));
+        writeLocal(localStrengthMovementKey, movements.sort((a, b) => compareExerciseDisplayNames(a.name, b.name)));
         return saved;
       }
       const user = await requireUser();
@@ -358,7 +362,7 @@ const MangoFitnessStore = (() => {
       const sb = client();
       if (!sb) {
         const movements = readLocal(localStrengthMovementKey).map((item) => item.id === id ? { ...item, ...movement } : item);
-        writeLocal(localStrengthMovementKey, movements.sort((a, b) => a.name.localeCompare(b.name)));
+        writeLocal(localStrengthMovementKey, movements.sort((a, b) => compareExerciseDisplayNames(a.name, b.name)));
         return { id, ...movement };
       }
       const { data, error } = await sb
@@ -5283,7 +5287,7 @@ function initAthleteHistoryApp(options = {}) {
         groups[key].push(result);
         return groups;
       }, {});
-      const groups = Object.values(grouped).sort((a, b) => String(a[0]?.exerciseName || "").localeCompare(String(b[0]?.exerciseName || "")));
+      const groups = Object.values(grouped).sort((a, b) => compareExerciseDisplayNames(a[0]?.exerciseName, b[0]?.exerciseName));
       const categoryGroups = groups.reduce((map, group) => {
         const category = progressGroupLabel(group[0]);
         if (!map.has(category)) map.set(category, []);
@@ -5518,7 +5522,7 @@ function initCoachMovementsApp() {
   }
 
   function renderMovementList() {
-    const rows = filteredMovements().sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
+    const rows = filteredMovements().sort((a, b) => compareExerciseDisplayNames(a.name, b.name));
     const heading = isBenchmarkPage
       ? `<thead><tr><th>Benchmark</th><th>Category</th><th>Standards</th><th>Leaderboard</th><th>Actions</th></tr></thead>`
       : `<thead><tr><th>Movement</th><th>Category</th><th>Description</th><th>Actions</th></tr></thead>`;
@@ -5916,7 +5920,7 @@ function initAthleteLeaderboardApp() {
         if (term && !event.name.toLowerCase().includes(term)) return;
         if (!eventGroups.has(event.name)) eventGroups.set(event.name, { event, results: [], historicalResults: [] });
       });
-      const groups = [...eventGroups.values()].sort((a, b) => a.event.name.localeCompare(b.event.name));
+      const groups = [...eventGroups.values()].sort((a, b) => compareExerciseDisplayNames(a.event.name, b.event.name));
       list.innerHTML = groups.length ? `<div class="list-stack leaderboard-list">${groups.map((group) => renderLeaderboardEvent(group.event.name, group.results, group.historicalResults, group.event.mode)).join("")}</div>` : `<p class="muted empty-state">No leaderboard results found yet.</p>`;
     } catch (error) {
       list.innerHTML = `<p class="muted empty-state">${escapeHtml(friendlyError(error))}</p>`;

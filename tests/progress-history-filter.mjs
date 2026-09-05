@@ -7,10 +7,11 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const source = fs.readFileSync(path.join(root, "assets/app.js"), "utf8");
 const sandbox = { window: {}, localStorage: { getItem: () => null, setItem: () => {} } };
-vm.runInNewContext(`${source}\nthis.__includeResultInProgressHistory = includeResultInProgressHistory; this.__normalizeExerciseDisplayName = normalizeExerciseDisplayName;`, sandbox);
+vm.runInNewContext(`${source}\nthis.__includeResultInProgressHistory = includeResultInProgressHistory; this.__normalizeExerciseDisplayName = normalizeExerciseDisplayName; this.__compareExerciseDisplayNames = compareExerciseDisplayNames;`, sandbox);
 
 const include = sandbox.__includeResultInProgressHistory;
 const normalizeName = sandbox.__normalizeExerciseDisplayName;
+const compareNames = sandbox.__compareExerciseDisplayNames;
 assert.equal(include({ exerciseName: "10-12 Min 24.1 Primer" }), false);
 assert.equal(include({ exerciseName: "12 Min 24.1 Movement Baseline" }), false);
 assert.equal(include({ exerciseName: "15 Min 24.1 EMOM" }), false);
@@ -57,5 +58,9 @@ assert.equal(normalizeName("Run 1 Mile"), "Run 1 Mile");
 assert.equal(normalizeName("5K Run"), "Run 5K");
 assert.equal(normalizeName("Incline Chest Press"), "Incline Chest Press");
 assert.equal(normalizeName("Hang Power Clean"), "Hang Power Clean");
+assert.deepEqual(
+  ["Back Squat 15 Rep", "Back Squat 5 Rep", "Back Squat 10 Rep"].sort(compareNames),
+  ["Back Squat 5 Rep", "Back Squat 10 Rep", "Back Squat 15 Rep"]
+);
 
 console.log("progress history filter checks passed");
