@@ -66,6 +66,10 @@ assert.equal(normalizeName("Dumbell Squat Clean Technique"), "Squat Clean Dumbbe
 assert.equal(normalizeName("Dumbbell Squat Clean"), "Squat Clean Dumbbell");
 assert.equal(normalizeName("Squat Clean DB Technique"), "Squat Clean Dumbbell");
 assert.equal(normalizeName("Squat Clean Dumbbell"), "Squat Clean Dumbbell");
+assert.equal(normalizeName("Kettle Bell Squatclean"), "Squat Clean Kettlebell");
+assert.equal(normalizeName("Kettlebell Squat Clean"), "Squat Clean Kettlebell");
+assert.equal(normalizeName("KB Squat Clean"), "Squat Clean Kettlebell");
+assert.equal(normalizeName("Squat Clean Kettlebell"), "Squat Clean Kettlebell");
 assert.equal(normalizeName("Seated Shoulder Press"), "Shoulder Press Seated");
 assert.equal(normalizeName("4K Row"), "Row 4K");
 assert.equal(normalizeName("1000m Row"), "Row 1K");
