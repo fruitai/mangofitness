@@ -13,6 +13,67 @@ function resetRedirectUrl() {
   return new URL("reset-password.html", window.location.href).href.replace(/[#?].*$/, "");
 }
 
+function configureEmailInput(input, autocomplete = "username") {
+  if (!input) return;
+  input.setAttribute("autocomplete", autocomplete);
+  input.setAttribute("inputmode", "email");
+  input.setAttribute("autocapitalize", "none");
+  input.setAttribute("spellcheck", "false");
+}
+
+function addPasswordVisibilityToggle(input, autocomplete = "current-password") {
+  if (!input || input.dataset.visibilityToggleReady === "true") return;
+  input.dataset.visibilityToggleReady = "true";
+  input.setAttribute("autocomplete", autocomplete);
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "password-input-wrap";
+  input.parentNode.insertBefore(wrapper, input);
+  wrapper.appendChild(input);
+
+  const toggle = document.createElement("button");
+  toggle.type = "button";
+  toggle.className = "password-visibility-toggle";
+  toggle.textContent = "Show";
+  toggle.setAttribute("aria-controls", input.id);
+  toggle.setAttribute("aria-label", "Show password");
+  toggle.setAttribute("aria-pressed", "false");
+  toggle.addEventListener("click", () => {
+    const shouldShow = input.type === "password";
+    input.type = shouldShow ? "text" : "password";
+    toggle.textContent = shouldShow ? "Hide" : "Show";
+    toggle.setAttribute("aria-label", shouldShow ? "Hide password" : "Show password");
+    toggle.setAttribute("aria-pressed", String(shouldShow));
+    input.focus();
+  });
+  wrapper.appendChild(toggle);
+}
+
+function initConnectionStatusBanner() {
+  let banner = document.getElementById("connectionStatusBanner");
+  if (!banner) {
+    banner = document.createElement("div");
+    banner.id = "connectionStatusBanner";
+    banner.className = "connection-status-banner hidden";
+    banner.setAttribute("role", "status");
+    banner.setAttribute("aria-live", "polite");
+    document.body.prepend(banner);
+  }
+
+  function updateConnectionStatus() {
+    const offline = !navigator.onLine;
+    banner.textContent = offline ? "You’re offline. Sign-in and sync need internet." : "";
+    banner.classList.toggle("hidden", !offline);
+  }
+
+  if (banner.dataset.connectionListenersReady !== "true") {
+    banner.dataset.connectionListenersReady = "true";
+    window.addEventListener("online", updateConnectionStatus);
+    window.addEventListener("offline", updateConnectionStatus);
+  }
+  updateConnectionStatus();
+}
+
 async function userHasCoachAccess(user) {
   if (!user?.id) return false;
   const { data, error } = await supabaseClient
@@ -40,13 +101,16 @@ async function initLoginPage(options) {
   const sendResetBtnId = `${options.forgotBtnId || options.emailId}SendReset`;
   const cancelResetBtnId = `${options.forgotBtnId || options.emailId}CancelReset`;
   const forgotMessageId = `${options.forgotBtnId || options.emailId}ResetMessage`;
+  configureEmailInput(email);
+  addPasswordVisibilityToggle(password);
+  initConnectionStatusBanner();
   if (forgotCard && forgot) {
     forgotCard.id = `${options.forgotBtnId}Card`;
     forgotCard.className = "card auth-card hidden";
     forgotCard.innerHTML = `
       <h2>Forgot Password</h2>
       <p class="muted">Enter your email address and we'll send a password reset link.</p>
-      <div class="field"><label for="${resetEmailId}">Email</label><input id="${resetEmailId}" type="email" placeholder="Email" /></div>
+      <div class="field"><label for="${resetEmailId}">Email</label><input id="${resetEmailId}" type="email" placeholder="Email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" /></div>
       <div class="actions" style="margin-top:14px;">
         <button type="button" id="${sendResetBtnId}" class="primary">Send Reset Link</button>
         <button type="button" id="${cancelResetBtnId}">Back to Sign In</button>
@@ -144,22 +208,39 @@ async function initLoginPage(options) {
   if (sessionData.session?.user) await showSignedInIfAllowed(sessionData.session.user);
   else showSignedOut();
 
-  signIn?.addEventListener("click", async () => {
+  let signInPending = false;
+
+  async function submitSignIn() {
+    if (!signIn || signInPending) return;
     setMessage(options.messageId, "");
     const userEmail = email.value.trim();
     const userPassword = password.value;
     if (!userEmail || !userPassword) return setMessage(options.messageId, "Enter your email and password.");
 
+    signInPending = true;
     signIn.disabled = true;
     signIn.textContent = "Signing in...";
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email: userEmail, password: userPassword });
-    signIn.disabled = false;
-    signIn.textContent = "Sign In";
+    let data;
+    let error;
+    try {
+      ({ data, error } = await supabaseClient.auth.signInWithPassword({ email: userEmail, password: userPassword }));
+    } finally {
+      signInPending = false;
+      signIn.disabled = false;
+      signIn.textContent = "Sign In";
+    }
 
     if (error) return setMessage(options.messageId, error.message || "Could not sign in.");
     const allowed = await showSignedInIfAllowed(data.user);
     if (!allowed) await supabaseClient.auth.signOut();
-  });
+  }
+
+  signIn?.addEventListener("click", submitSignIn);
+  [email, password].forEach((input) => input?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" || event.isComposing) return;
+    event.preventDefault();
+    submitSignIn();
+  }));
 
   forgot?.addEventListener("click", showForgotCard);
   document.getElementById(sendResetBtnId)?.addEventListener("click", sendResetEmail);
@@ -175,6 +256,9 @@ async function initResetPasswordPage() {
   const save = document.getElementById("savePasswordBtn");
   const newPassword = document.getElementById("newPassword");
   const confirmPassword = document.getElementById("confirmPassword");
+  addPasswordVisibilityToggle(newPassword, "new-password");
+  addPasswordVisibilityToggle(confirmPassword, "new-password");
+  initConnectionStatusBanner();
 
   save?.addEventListener("click", async () => {
     setMessage("resetMessage", "");
