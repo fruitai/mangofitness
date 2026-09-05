@@ -26,6 +26,9 @@ assert.equal(normalizeName("24.1-Style 21-15-9 Intervals"), "24.1-Style 21-15-9 
 assert.equal(normalizeName("Side Lunge"), "Lateral Lunge");
 assert.equal(normalizeName("side-lunge"), "Lateral Lunge");
 assert.equal(normalizeName("Reverse Lunge"), "Reverse Lunge");
+assert.equal(normalizeName("Bodyweight WOD"), "300 Rep Challenge");
+assert.equal(normalizeName("Body Weight WOD"), "300 Rep Challenge");
+assert.equal(normalizeName("Angie"), "Angie");
 assert.equal(normalizeName("Dumbbell Bench Press"), "Bench Press Dumbbell");
 assert.equal(normalizeName("Dumbell Bench Press"), "Bench Press Dumbbell");
 assert.equal(normalizeName("DB Bench Press"), "Bench Press Dumbbell");

@@ -5,6 +5,8 @@ const exerciseDisplayNameAliases = new Map([
   ["squat back", "Back Squat"],
   ["front squat", "Front Squat"],
   ["squat front", "Front Squat"],
+  ["bodyweight wod", "300 Rep Challenge"],
+  ["body weight wod", "300 Rep Challenge"],
   ["hex bar deadlift", "Deadlift Hex Bar"],
   ["hex-bar deadlift", "Deadlift Hex Bar"],
   ["deadlift hex bar", "Deadlift Hex Bar"],
